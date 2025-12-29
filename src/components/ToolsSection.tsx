@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { GoldConverter } from './GoldConverter';
 import { InvestmentCalculator } from './InvestmentCalculator';
 import { AssetComparator } from './AssetComparator';
@@ -6,19 +7,23 @@ import { ComparisonChart } from './ComparisonChart';
 import { PriceAlertForm } from './PriceAlertForm';
 import { CurrencySelector } from './CurrencySelector';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useParallax } from '@/hooks/useParallax';
 import goldTrading from '@/assets/gold-trading.jpg';
 
 export const ToolsSection = () => {
   const { t } = useLanguage();
+  const sectionRef = useRef<HTMLElement>(null);
+  const parallaxOffset = useParallax(sectionRef, 0.15);
   
   return (
-    <section id="herramientas" className="py-24 relative overflow-hidden">
-      {/* Background Image */}
+    <section ref={sectionRef} id="herramientas" className="py-24 relative overflow-hidden">
+      {/* Background Image with Parallax */}
       <div className="absolute inset-0">
         <img 
           src={goldTrading} 
           alt="Gold trading" 
-          className="w-full h-full object-cover opacity-[0.03]"
+          className="w-full h-full object-cover opacity-[0.03] transition-transform duration-100"
+          style={{ transform: `translateY(${parallaxOffset * 0.4}px) scale(1.2)` }}
         />
       </div>
       {/* Background */}

@@ -1,20 +1,25 @@
+import { useRef } from 'react';
 import { ArrowRight, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { GoldPriceDisplay } from './GoldPriceDisplay';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useParallax } from '@/hooks/useParallax';
 import heroImage from '@/assets/hero-gold-bars.jpg';
 
 export const Hero = () => {
   const { t } = useLanguage();
+  const sectionRef = useRef<HTMLElement>(null);
+  const parallaxOffset = useParallax(sectionRef, 0.3);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
+    <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background Image with Parallax */}
       <div className="absolute inset-0">
         <img 
           src={heroImage} 
           alt="Gold bars investment" 
-          className="w-full h-full object-cover opacity-15"
+          className="w-full h-full object-cover opacity-15 transition-transform duration-100"
+          style={{ transform: `translateY(${parallaxOffset * 0.5}px) scale(1.1)` }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/40" />
       </div>
@@ -22,8 +27,14 @@ export const Hero = () => {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_hsl(20_14%_8%)_0%,_transparent_70%)]" />
       
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/5 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gold/3 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
+        <div 
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/5 rounded-full blur-3xl animate-pulse-slow"
+          style={{ transform: `translateY(${parallaxOffset * -0.2}px)` }}
+        />
+        <div 
+          className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gold/3 rounded-full blur-3xl animate-pulse-slow"
+          style={{ animationDelay: '1s', transform: `translateY(${parallaxOffset * 0.1}px)` }}
+        />
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
