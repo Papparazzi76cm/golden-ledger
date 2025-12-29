@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Bell, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useParallax } from '@/hooks/useParallax';
 import goldVault from '@/assets/gold-vault.jpg';
 
 export const NewsletterSection = () => {
@@ -11,6 +12,8 @@ export const NewsletterSection = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
   const { t } = useLanguage();
+  const sectionRef = useRef<HTMLElement>(null);
+  const parallaxOffset = useParallax(sectionRef, 0.25);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,13 +27,14 @@ export const NewsletterSection = () => {
   };
 
   return (
-    <section className="py-24 relative overflow-hidden">
-      {/* Background Image */}
+    <section ref={sectionRef} className="py-24 relative overflow-hidden">
+      {/* Background Image with Parallax */}
       <div className="absolute inset-0">
         <img 
           src={goldVault} 
           alt="Gold vault" 
-          className="w-full h-full object-cover opacity-10"
+          className="w-full h-full object-cover opacity-10 transition-transform duration-100"
+          style={{ transform: `translateY(${parallaxOffset * 0.35}px) scale(1.15)` }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background" />
       </div>

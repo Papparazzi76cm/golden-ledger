@@ -1,10 +1,14 @@
+import { useRef } from 'react';
 import { BookOpen, Shield, TrendingUp, Landmark, Globe, Award } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useParallax } from '@/hooks/useParallax';
 import goldAbstract from '@/assets/gold-abstract.jpg';
 
 export const FeaturesSection = () => {
   const { t } = useLanguage();
+  const sectionRef = useRef<HTMLElement>(null);
+  const parallaxOffset = useParallax(sectionRef, 0.2);
 
   const features = [
     { icon: TrendingUp, ...t.features.items.realTimePrice },
@@ -16,13 +20,14 @@ export const FeaturesSection = () => {
   ];
 
   return (
-    <section className="py-24 relative bg-charcoal-light/50 overflow-hidden">
-      {/* Background Image */}
+    <section ref={sectionRef} className="py-24 relative bg-charcoal-light/50 overflow-hidden">
+      {/* Background Image with Parallax */}
       <div className="absolute inset-0">
         <img 
           src={goldAbstract} 
           alt="Gold abstract background" 
-          className="w-full h-full object-cover opacity-5"
+          className="w-full h-full object-cover opacity-5 transition-transform duration-100"
+          style={{ transform: `translateY(${parallaxOffset * 0.3}px) scale(1.15)` }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
       </div>
@@ -46,7 +51,10 @@ export const FeaturesSection = () => {
               key={feature.title} 
               variant="ghost"
               className="group p-6 hover:bg-gold/5 transition-all duration-300 animate-fade-in cursor-pointer"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              style={{ 
+                animationDelay: `${index * 0.1}s`,
+                transform: `translateY(${parallaxOffset * 0.05 * (index % 2 === 0 ? 1 : -1)}px)`
+              }}
             >
               <CardContent className="p-0 space-y-4">
                 <div className="w-14 h-14 rounded-xl bg-gold/10 flex items-center justify-center group-hover:bg-gold/20 group-hover:scale-110 transition-all duration-300">
