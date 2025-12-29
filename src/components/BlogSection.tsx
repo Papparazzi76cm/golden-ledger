@@ -4,6 +4,12 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { getRecentArticles } from '@/data/articles';
 import { useLanguage } from '@/hooks/useLanguage';
+import goldCoins from '@/assets/gold-coins.jpg';
+import goldChart from '@/assets/gold-chart.jpg';
+import goldTrading from '@/assets/gold-trading.jpg';
+import goldVault from '@/assets/gold-vault.jpg';
+
+const articleImages = [goldCoins, goldChart, goldTrading, goldVault];
 
 export const BlogSection = () => {
   const { t } = useLanguage();
@@ -42,11 +48,14 @@ export const BlogSection = () => {
                 className="group cursor-pointer overflow-hidden lg:row-span-2 h-full"
               >
                 <div className="h-full flex flex-col">
-                  {/* Image Placeholder */}
-                  <div className="h-64 bg-gradient-to-br from-gold/20 to-gold/5 flex items-center justify-center">
-                    <div className="w-20 h-20 rounded-full bg-gold/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <span className="font-heading text-4xl text-gold">Au</span>
-                    </div>
+                  {/* Featured Image */}
+                  <div className="h-64 relative overflow-hidden">
+                    <img 
+                      src={goldCoins} 
+                      alt={featuredArticle.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
                   </div>
                   <CardContent className="flex-1 flex flex-col p-6">
                     <span className="inline-block px-3 py-1 rounded-full bg-gold/10 text-gold text-xs font-body w-fit mb-4">
@@ -76,15 +85,19 @@ export const BlogSection = () => {
 
           {/* Other Articles */}
           <div className="space-y-4">
-            {otherArticles.map((article) => (
+            {otherArticles.map((article, index) => (
               <Link key={article.slug} to={`/blog/${article.slug}`}>
                 <Card 
                   variant="ghost"
                   className="group cursor-pointer p-4 hover:bg-gold/5 transition-all duration-300 border border-gold/10 hover:border-gold/30"
                 >
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-20 h-20 rounded-lg bg-gradient-to-br from-gold/20 to-gold/5 flex items-center justify-center">
-                      <span className="font-heading text-lg text-gold">Au</span>
+                    <div className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden">
+                      <img 
+                        src={articleImages[(index + 1) % articleImages.length]}
+                        alt={article.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
                     </div>
                     <div className="flex-1 min-w-0">
                       <span className="inline-block px-2 py-0.5 rounded-full bg-gold/10 text-gold text-xs font-body mb-2">

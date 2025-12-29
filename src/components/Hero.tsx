@@ -2,12 +2,22 @@ import { ArrowRight, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { GoldPriceDisplay } from './GoldPriceDisplay';
 import { useLanguage } from '@/hooks/useLanguage';
+import heroImage from '@/assets/hero-gold-bars.jpg';
 
 export const Hero = () => {
   const { t } = useLanguage();
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <img 
+          src={heroImage} 
+          alt="Gold bars investment" 
+          className="w-full h-full object-cover opacity-30"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/40" />
+      </div>
       <div className="absolute inset-0 bg-gradient-radial-gold" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_hsl(20_14%_8%)_0%,_transparent_70%)]" />
       
