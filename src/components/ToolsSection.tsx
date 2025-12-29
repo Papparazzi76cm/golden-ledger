@@ -2,6 +2,8 @@ import { GoldConverter } from './GoldConverter';
 import { InvestmentCalculator } from './InvestmentCalculator';
 import { AssetComparator } from './AssetComparator';
 import { HistoricalGoldChart } from './HistoricalGoldChart';
+import { ComparisonChart } from './ComparisonChart';
+import { PriceAlertForm } from './PriceAlertForm';
 
 export const ToolsSection = () => {
   return (
@@ -28,16 +30,24 @@ export const ToolsSection = () => {
           <HistoricalGoldChart />
         </div>
 
+        {/* Comparison Chart - Full Width */}
+        <div className="mb-12 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <ComparisonChart />
+        </div>
+
         {/* Tools Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
             <GoldConverter />
           </div>
-          <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <InvestmentCalculator />
           </div>
-          <div className="animate-fade-in md:col-span-2 lg:col-span-1" style={{ animationDelay: '0.3s' }}>
+          <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <AssetComparator />
+          </div>
+          <div className="animate-fade-in" style={{ animationDelay: '0.5s' }}>
+            <PriceAlertForm />
           </div>
         </div>
       </div>
