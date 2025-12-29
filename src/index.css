@@ -6,7 +6,81 @@
 
 @layer base {
   :root {
-    /* Premium Gold Investment Theme */
+    /* Light Theme - Cream and Gold */
+    --background: 40 30% 96%;
+    --foreground: 20 14% 15%;
+
+    --card: 40 25% 98%;
+    --card-foreground: 20 14% 15%;
+
+    --popover: 40 25% 98%;
+    --popover-foreground: 20 14% 15%;
+
+    /* Gold as primary */
+    --primary: 43 74% 45%;
+    --primary-foreground: 40 30% 98%;
+
+    /* Warm cream secondary */
+    --secondary: 40 20% 90%;
+    --secondary-foreground: 20 14% 15%;
+
+    --muted: 40 15% 92%;
+    --muted-foreground: 20 10% 40%;
+
+    /* Subtle gold accent */
+    --accent: 43 60% 50%;
+    --accent-foreground: 20 14% 10%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 40 20% 85%;
+    --input: 40 20% 85%;
+    --ring: 43 74% 45%;
+
+    --radius: 0.5rem;
+
+    /* Custom tokens - Light mode */
+    --gold: 43 74% 45%;
+    --gold-light: 43 80% 60%;
+    --gold-dark: 43 70% 35%;
+    --gold-muted: 43 40% 70%;
+    
+    --cream: 40 30% 96%;
+    --cream-muted: 20 10% 40%;
+    
+    --charcoal: 40 25% 94%;
+    --charcoal-light: 40 20% 90%;
+    --charcoal-dark: 40 30% 96%;
+
+    /* Gradients - Light mode */
+    --gradient-gold: linear-gradient(135deg, hsl(43 74% 45%), hsl(43 80% 55%));
+    --gradient-gold-subtle: linear-gradient(135deg, hsl(43 60% 50%), hsl(43 74% 45%));
+    --gradient-dark: linear-gradient(180deg, hsl(40 30% 96%), hsl(40 25% 92%));
+    --gradient-radial-gold: radial-gradient(circle at 50% 0%, hsl(43 74% 45% / 0.12), transparent 50%);
+
+    /* Shadows - Light mode */
+    --shadow-gold: 0 10px 40px -10px hsl(43 74% 45% / 0.25);
+    --shadow-gold-lg: 0 20px 60px -15px hsl(43 74% 45% / 0.35);
+    --shadow-elegant: 0 25px 50px -12px hsl(0 0% 0% / 0.15);
+
+    /* Typography */
+    --font-heading: 'Cormorant Garamond', serif;
+    --font-body: 'Inter', sans-serif;
+
+    /* Sidebar - Light mode */
+    --sidebar-background: 40 25% 94%;
+    --sidebar-foreground: 20 14% 15%;
+    --sidebar-primary: 43 74% 45%;
+    --sidebar-primary-foreground: 40 30% 98%;
+    --sidebar-accent: 43 60% 50%;
+    --sidebar-accent-foreground: 20 14% 15%;
+    --sidebar-border: 40 20% 85%;
+    --sidebar-ring: 43 74% 45%;
+  }
+
+  .dark {
+    /* Premium Gold Investment Theme - Dark */
     --background: 20 14% 4%;
     --foreground: 43 27% 88%;
 
@@ -38,9 +112,7 @@
     --input: 43 20% 18%;
     --ring: 43 74% 49%;
 
-    --radius: 0.5rem;
-
-    /* Custom tokens */
+    /* Custom tokens - Dark mode */
     --gold: 43 74% 49%;
     --gold-light: 43 80% 65%;
     --gold-dark: 43 70% 35%;
@@ -53,22 +125,18 @@
     --charcoal-light: 20 14% 12%;
     --charcoal-dark: 20 14% 4%;
 
-    /* Gradients */
+    /* Gradients - Dark mode */
     --gradient-gold: linear-gradient(135deg, hsl(43 74% 49%), hsl(43 80% 65%));
     --gradient-gold-subtle: linear-gradient(135deg, hsl(43 60% 40%), hsl(43 74% 49%));
     --gradient-dark: linear-gradient(180deg, hsl(20 14% 4%), hsl(20 14% 8%));
     --gradient-radial-gold: radial-gradient(circle at 50% 0%, hsl(43 74% 49% / 0.15), transparent 50%);
 
-    /* Shadows */
+    /* Shadows - Dark mode */
     --shadow-gold: 0 10px 40px -10px hsl(43 74% 49% / 0.3);
     --shadow-gold-lg: 0 20px 60px -15px hsl(43 74% 49% / 0.4);
     --shadow-elegant: 0 25px 50px -12px hsl(0 0% 0% / 0.5);
 
-    /* Typography */
-    --font-heading: 'Cormorant Garamond', serif;
-    --font-body: 'Inter', sans-serif;
-
-    /* Sidebar */
+    /* Sidebar - Dark mode */
     --sidebar-background: 20 14% 6%;
     --sidebar-foreground: 43 27% 88%;
     --sidebar-primary: 43 74% 49%;
@@ -77,28 +145,6 @@
     --sidebar-accent-foreground: 43 27% 88%;
     --sidebar-border: 43 20% 18%;
     --sidebar-ring: 43 74% 49%;
-  }
-
-  .dark {
-    --background: 20 14% 4%;
-    --foreground: 43 27% 88%;
-    --card: 20 14% 7%;
-    --card-foreground: 43 27% 88%;
-    --popover: 20 14% 7%;
-    --popover-foreground: 43 27% 88%;
-    --primary: 43 74% 49%;
-    --primary-foreground: 20 14% 4%;
-    --secondary: 40 20% 15%;
-    --secondary-foreground: 43 27% 88%;
-    --muted: 20 14% 12%;
-    --muted-foreground: 43 15% 55%;
-    --accent: 43 60% 40%;
-    --accent-foreground: 43 27% 95%;
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 43 20% 18%;
-    --input: 43 20% 18%;
-    --ring: 43 74% 49%;
   }
 }
 
