@@ -18,10 +18,10 @@ export const Hero = () => {
         <img 
           src={heroImage} 
           alt="Gold bars investment" 
-          className="w-full h-full object-cover opacity-15 transition-transform duration-100"
+          className="w-full h-full object-cover opacity-25 transition-transform duration-100"
           style={{ transform: `translateY(${parallaxOffset * 0.5}px) scale(1.1)` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
       </div>
       <div className="absolute inset-0 bg-gradient-radial-gold" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_hsl(20_14%_8%)_0%,_transparent_70%)]" />

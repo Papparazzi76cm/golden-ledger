@@ -26,10 +26,10 @@ export const FeaturesSection = () => {
         <img 
           src={goldAbstract} 
           alt="Gold abstract background" 
-          className="w-full h-full object-cover opacity-5 transition-transform duration-100"
+          className="w-full h-full object-cover opacity-[0.12] transition-transform duration-100"
           style={{ transform: `translateY(${parallaxOffset * 0.3}px) scale(1.15)` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-transparent to-background/80" />
       </div>
       
       <div className="container mx-auto px-4 relative z-10">
