@@ -1,30 +1,33 @@
 import { Link } from 'react-router-dom';
 import { Mail, Twitter, Linkedin, Youtube } from 'lucide-react';
-
-const footerLinks = {
-  recursos: [
-    { label: 'Guía del Oro', href: '#guia' },
-    { label: 'Calculadora', href: '#calculadora' },
-    { label: 'Conversor', href: '#conversor' },
-    { label: 'Comparador', href: '#comparador' },
-    { label: 'Glosario', href: '#glosario' },
-  ],
-  aprende: [
-    { label: 'Cómo Comprar Oro', href: '#comprar' },
-    { label: 'Tipos de Oro', href: '#tipos' },
-    { label: 'Almacenamiento', href: '#almacenamiento' },
-    { label: 'Fiscalidad', href: '#fiscalidad' },
-    { label: 'Blog', href: '#blog' },
-  ],
-  legal: [
-    { label: 'Aviso Legal', href: '#aviso' },
-    { label: 'Privacidad', href: '#privacidad' },
-    { label: 'Cookies', href: '#cookies' },
-    { label: 'Disclaimer', href: '#disclaimer' },
-  ],
-};
+import { useLanguage } from '@/hooks/useLanguage';
 
 export const Footer = () => {
+  const { t } = useLanguage();
+
+  const footerLinks = {
+    recursos: [
+      { label: t.nav.goldGuide, href: '#guia' },
+      { label: t.nav.calculator, href: '#calculadora' },
+      { label: t.nav.converter, href: '#conversor' },
+      { label: t.nav.comparator, href: '#comparador' },
+      { label: t.nav.glossary, href: '#glosario' },
+    ],
+    aprende: [
+      { label: t.footer.howToBuy, href: '#comprar' },
+      { label: t.footer.goldTypes, href: '#tipos' },
+      { label: t.footer.storage, href: '#almacenamiento' },
+      { label: t.footer.taxation, href: '#fiscalidad' },
+      { label: t.nav.blog, href: '#blog' },
+    ],
+    legal: [
+      { label: t.footer.legalNotice, href: '#aviso' },
+      { label: t.footer.privacy, href: '#privacidad' },
+      { label: t.footer.cookies, href: '#cookies' },
+      { label: t.footer.disclaimer, href: '#disclaimer' },
+    ],
+  };
+
   return (
     <footer className="bg-charcoal-dark border-t border-gold/10">
       <div className="container mx-auto px-4 py-16">
@@ -40,8 +43,7 @@ export const Footer = () => {
               </span>
             </Link>
             <p className="text-muted-foreground font-body text-sm mb-6 max-w-sm">
-              Tu portal de referencia para inversiones en metales preciosos. 
-              Información, herramientas y educación financiera de calidad.
+              {t.footer.description}
             </p>
             <div className="flex gap-4">
               <a href="#" className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-muted-foreground hover:text-gold hover:bg-gold/20 transition-all duration-300">
@@ -61,7 +63,7 @@ export const Footer = () => {
 
           {/* Links */}
           <div>
-            <h4 className="font-heading text-lg font-semibold text-foreground mb-4">Recursos</h4>
+            <h4 className="font-heading text-lg font-semibold text-foreground mb-4">{t.footer.resources}</h4>
             <ul className="space-y-3">
               {footerLinks.recursos.map((link) => (
                 <li key={link.label}>
@@ -74,7 +76,7 @@ export const Footer = () => {
           </div>
 
           <div>
-            <h4 className="font-heading text-lg font-semibold text-foreground mb-4">Aprende</h4>
+            <h4 className="font-heading text-lg font-semibold text-foreground mb-4">{t.footer.learn}</h4>
             <ul className="space-y-3">
               {footerLinks.aprende.map((link) => (
                 <li key={link.label}>
@@ -87,7 +89,7 @@ export const Footer = () => {
           </div>
 
           <div>
-            <h4 className="font-heading text-lg font-semibold text-foreground mb-4">Legal</h4>
+            <h4 className="font-heading text-lg font-semibold text-foreground mb-4">{t.footer.legal}</h4>
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
                 <li key={link.label}>
@@ -104,12 +106,10 @@ export const Footer = () => {
         <div className="mt-16 pt-8 border-t border-gold/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground font-body">
-              © {new Date().getFullYear()} OroInversión. Todos los derechos reservados.
+              © {new Date().getFullYear()} OroInversión. {t.footer.copyright}
             </p>
             <p className="text-xs text-muted-foreground font-body text-center max-w-xl">
-              <strong>Disclaimer:</strong> Este sitio es únicamente informativo y educativo. 
-              No constituye asesoramiento financiero, de inversión o legal. 
-              Consulta a un profesional antes de tomar decisiones de inversión.
+              <strong>Disclaimer:</strong> {t.footer.disclaimerText}
             </p>
           </div>
         </div>

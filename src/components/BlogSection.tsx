@@ -3,8 +3,10 @@ import { Clock, ArrowRight, User } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { getRecentArticles } from '@/data/articles';
+import { useLanguage } from '@/hooks/useLanguage';
 
 export const BlogSection = () => {
+  const { t } = useLanguage();
   const recentArticles = getRecentArticles(4);
   const featuredArticle = recentArticles.find(a => a.featured);
   const otherArticles = recentArticles.filter(a => !a.featured).slice(0, 3);
@@ -16,15 +18,15 @@ export const BlogSection = () => {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
           <div>
             <span className="inline-block px-4 py-1 rounded-full bg-gold/10 text-gold text-sm font-body mb-4">
-              Blog & Educación
+              {t.blog.badge}
             </span>
             <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground">
-              Conocimiento que <span className="text-gradient-gold">Multiplica</span>
+              {t.blog.title1} <span className="text-gradient-gold">{t.blog.titleHighlight}</span>
             </h2>
           </div>
           <Link to="/blog">
             <Button variant="gold-outline">
-              Ver todos los artículos
+              {t.blog.viewAll}
               <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>

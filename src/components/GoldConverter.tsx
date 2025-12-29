@@ -2,17 +2,22 @@ import { useState } from 'react';
 import { ArrowRightLeft, Calculator, Scale } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { useGoldPrice } from './GoldPriceDisplay';
+import { useCurrency } from '@/hooks/useCurrency';
+import { useLanguage } from '@/hooks/useLanguage';
 
 // Conversion constants
 const GRAMS_PER_OUNCE = 31.1035;
 
 export const GoldConverter = () => {
   const { price } = useGoldPrice();
+  const { symbol, convert, currency } = useCurrency();
+  const { t } = useLanguage();
+  const convertedPrice = convert(price);
+  
   const [grams, setGrams] = useState<string>('100');
   const [ounces, setOunces] = useState<string>((100 / GRAMS_PER_OUNCE).toFixed(4));
-  const [value, setValue] = useState<string>((100 / GRAMS_PER_OUNCE * price).toFixed(2));
+  const [value, setValue] = useState<string>((100 / GRAMS_PER_OUNCE * convertedPrice).toFixed(2));
   const [activeField, setActiveField] = useState<'grams' | 'ounces' | 'value'>('grams');
 
   const updateFromGrams = (g: string) => {
@@ -20,20 +25,20 @@ export const GoldConverter = () => {
     const numG = parseFloat(g) || 0;
     const oz = numG / GRAMS_PER_OUNCE;
     setOunces(oz.toFixed(4));
-    setValue((oz * price).toFixed(2));
+    setValue((oz * convertedPrice).toFixed(2));
   };
 
   const updateFromOunces = (oz: string) => {
     setOunces(oz);
     const numOz = parseFloat(oz) || 0;
     setGrams((numOz * GRAMS_PER_OUNCE).toFixed(2));
-    setValue((numOz * price).toFixed(2));
+    setValue((numOz * convertedPrice).toFixed(2));
   };
 
   const updateFromValue = (v: string) => {
     setValue(v);
     const numV = parseFloat(v) || 0;
-    const oz = numV / price;
+    const oz = numV / convertedPrice;
     setOunces(oz.toFixed(4));
     setGrams((oz * GRAMS_PER_OUNCE).toFixed(2));
   };
@@ -44,14 +49,14 @@ export const GoldConverter = () => {
         <div className="mx-auto w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center mb-4">
           <ArrowRightLeft className="w-6 h-6 text-gold" />
         </div>
-        <CardTitle className="text-xl">Conversor de Oro</CardTitle>
+        <CardTitle className="text-xl">{t.goldConverter.title}</CardTitle>
         <p className="text-sm text-muted-foreground font-body">
-          Convierte entre gramos, onzas y valor monetario
+          {t.goldConverter.subtitle}
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <label className="text-sm text-muted-foreground font-body">Gramos</label>
+          <label className="text-sm text-muted-foreground font-body">{t.goldConverter.grams}</label>
           <Input
             type="number"
             value={grams}
@@ -68,7 +73,7 @@ export const GoldConverter = () => {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm text-muted-foreground font-body">Onzas Troy</label>
+          <label className="text-sm text-muted-foreground font-body">{t.goldConverter.ounces}</label>
           <Input
             type="number"
             value={ounces}
@@ -85,7 +90,7 @@ export const GoldConverter = () => {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm text-muted-foreground font-body">Valor en USD</label>
+          <label className="text-sm text-muted-foreground font-body">{t.goldConverter.value} ({currency})</label>
           <Input
             type="number"
             value={value}
@@ -96,7 +101,7 @@ export const GoldConverter = () => {
         </div>
 
         <div className="pt-4 text-center text-xs text-muted-foreground font-body">
-          Precio actual: ${price.toLocaleString()} USD/oz
+          {t.goldConverter.currentPrice}: {symbol}{convertedPrice.toLocaleString()} {currency}{t.goldConverter.perOunce}
         </div>
       </CardContent>
     </Card>

@@ -12,15 +12,9 @@ import {
 import { TrendingUp, TrendingDown, Calendar, DollarSign, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getYearlyData, calculateStats, GoldDataPoint } from '@/data/goldHistoricalData';
+import { useLanguage } from '@/hooks/useLanguage';
 
 type TimePeriod = 5 | 10 | 25 | 50;
-
-const periodLabels: { [key in TimePeriod]: string } = {
-  5: '5 Años',
-  10: '10 Años',
-  25: '25 Años',
-  50: '50 Años'
-};
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -46,7 +40,15 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
 };
 
 export const HistoricalGoldChart = () => {
+  const { t } = useLanguage();
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>(10);
+  
+  const periodLabels: { [key in TimePeriod]: string } = {
+    5: `5 ${t.historicalChart.years}`,
+    10: `10 ${t.historicalChart.years}`,
+    25: `25 ${t.historicalChart.years}`,
+    50: `50 ${t.historicalChart.years}`
+  };
   
   const chartData = useMemo(() => getYearlyData(selectedPeriod), [selectedPeriod]);
   const stats = useMemo(() => calculateStats(chartData), [chartData]);
@@ -82,10 +84,10 @@ export const HistoricalGoldChart = () => {
               <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
                 <Calendar className="w-5 h-5 text-gold" />
               </div>
-              Evolución Histórica del Oro
+              {t.historicalChart.title}
             </CardTitle>
             <p className="text-muted-foreground font-body mt-2">
-              Precio del oro en USD por onza troy
+              {t.historicalChart.subtitle}
             </p>
           </div>
           
@@ -114,7 +116,7 @@ export const HistoricalGoldChart = () => {
           <div className="bg-charcoal/50 rounded-lg p-4 border border-gold/10">
             <div className="flex items-center gap-2 text-muted-foreground text-sm font-body mb-1">
               <DollarSign className="w-4 h-4" />
-              Precio Inicial
+              {t.historicalChart.initialPrice}
             </div>
             <p className="font-heading text-xl text-foreground">
               ${stats.first?.toLocaleString()}
@@ -124,7 +126,7 @@ export const HistoricalGoldChart = () => {
           <div className="bg-charcoal/50 rounded-lg p-4 border border-gold/10">
             <div className="flex items-center gap-2 text-muted-foreground text-sm font-body mb-1">
               <DollarSign className="w-4 h-4" />
-              Precio Actual
+              {t.historicalChart.currentPrice}
             </div>
             <p className="font-heading text-xl text-gold">
               ${stats.last?.toLocaleString()}
@@ -138,7 +140,7 @@ export const HistoricalGoldChart = () => {
               ) : (
                 <ArrowDownRight className="w-4 h-4 text-red-500" />
               )}
-              Cambio
+              {t.historicalChart.change}
             </div>
             <p className={`font-heading text-xl ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
               {isPositive ? '+' : ''}{stats.changePercent.toFixed(1)}%
@@ -152,7 +154,7 @@ export const HistoricalGoldChart = () => {
               ) : (
                 <TrendingDown className="w-4 h-4 text-red-500" />
               )}
-              Máximo
+              {t.historicalChart.maximum}
             </div>
             <p className="font-heading text-xl text-foreground">
               ${stats.max.toLocaleString()}
@@ -238,17 +240,17 @@ export const HistoricalGoldChart = () => {
         <div className="flex flex-wrap items-center justify-center gap-6 pt-4 border-t border-gold/10 text-sm font-body text-muted-foreground">
           <div className="flex items-center gap-2">
             <div className="w-8 h-0.5 bg-gradient-to-r from-gold-dark via-gold to-gold-light rounded" />
-            <span>Precio del Oro (USD/oz)</span>
+            <span>{t.historicalChart.legend1}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-8 h-0.5 border-t-2 border-dashed border-gold-muted" />
-            <span>Precio Inicial del Período</span>
+            <span>{t.historicalChart.legend2}</span>
           </div>
         </div>
 
         {/* Disclaimer */}
         <p className="text-xs text-muted-foreground text-center font-body pt-2">
-          Datos históricos aproximados. Precios de referencia, no constituyen asesoramiento financiero.
+          {t.historicalChart.disclaimer}
         </p>
       </CardContent>
     </Card>
