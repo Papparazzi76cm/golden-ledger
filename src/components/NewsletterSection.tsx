@@ -30,7 +30,7 @@ export const NewsletterSection = () => {
         <img 
           src={goldVault} 
           alt="Gold vault" 
-          className="w-full h-full object-cover opacity-20"
+          className="w-full h-full object-cover opacity-10"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background" />
       </div>

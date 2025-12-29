@@ -18,7 +18,7 @@ export const ToolsSection = () => {
         <img 
           src={goldTrading} 
           alt="Gold trading" 
-          className="w-full h-full object-cover opacity-5"
+          className="w-full h-full object-cover opacity-[0.03]"
         />
       </div>
       {/* Background */}

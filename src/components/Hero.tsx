@@ -14,7 +14,7 @@ export const Hero = () => {
         <img 
           src={heroImage} 
           alt="Gold bars investment" 
-          className="w-full h-full object-cover opacity-30"
+          className="w-full h-full object-cover opacity-15"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/40" />
       </div>

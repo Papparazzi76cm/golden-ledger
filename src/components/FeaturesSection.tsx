@@ -22,7 +22,7 @@ export const FeaturesSection = () => {
         <img 
           src={goldAbstract} 
           alt="Gold abstract background" 
-          className="w-full h-full object-cover opacity-10"
+          className="w-full h-full object-cover opacity-5"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
       </div>
