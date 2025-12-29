@@ -1711,11 +1711,11 @@ export const getArticleBySlug = (slug: string): Article | undefined => {
   return articles.find(article => article.slug === slug);
 };
 
-export const getFeaturedArticle = (): Article | undefined => {
+export const getFeaturedArticle = (language?: Language): Article | undefined => {
   return articles.find(article => article.featured);
 };
 
-export const getRecentArticles = (count: number = 6): Article[] => {
+export const getRecentArticles = (count: number = 6, language?: Language): Article[] => {
   return [...articles]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, count);

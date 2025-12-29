@@ -22,7 +22,7 @@ export const ToolsSection = () => {
         <img 
           src={goldTrading} 
           alt="Gold trading" 
-          className="w-full h-full object-cover opacity-[0.03] transition-transform duration-100"
+          className="w-full h-full object-cover opacity-[0.1] transition-transform duration-100"
           style={{ transform: `translateY(${parallaxOffset * 0.4}px) scale(1.2)` }}
         />
       </div>

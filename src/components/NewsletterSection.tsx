@@ -33,10 +33,10 @@ export const NewsletterSection = () => {
         <img 
           src={goldVault} 
           alt="Gold vault" 
-          className="w-full h-full object-cover opacity-10 transition-transform duration-100"
+          className="w-full h-full object-cover opacity-20 transition-transform duration-100"
           style={{ transform: `translateY(${parallaxOffset * 0.35}px) scale(1.15)` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background/80" />
       </div>
       {/* Background Overlays */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold/5 to-transparent" />
