@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
-type Currency = 'USD' | 'EUR';
+type Currency = 'USD' | 'EUR' | 'GBP' | 'CHF' | 'JPY';
 
 interface CurrencyContextType {
   currency: Currency;
@@ -10,15 +10,29 @@ interface CurrencyContextType {
   rate: number;
 }
 
-const EUR_RATE = 0.92; // 1 USD = 0.92 EUR (approximate)
+const RATES: Record<Currency, number> = {
+  USD: 1,
+  EUR: 0.92,
+  GBP: 0.79,
+  CHF: 0.88,
+  JPY: 157.5,
+};
+
+const SYMBOLS: Record<Currency, string> = {
+  USD: '$',
+  EUR: '€',
+  GBP: '£',
+  CHF: 'Fr.',
+  JPY: '¥',
+};
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
 
 export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
   const [currency, setCurrency] = useState<Currency>('USD');
 
-  const symbol = currency === 'USD' ? '$' : '€';
-  const rate = currency === 'USD' ? 1 : EUR_RATE;
+  const symbol = SYMBOLS[currency];
+  const rate = RATES[currency];
 
   const convert = (usdAmount: number) => {
     return usdAmount * rate;
