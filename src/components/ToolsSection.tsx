@@ -1,6 +1,7 @@
 import { GoldConverter } from './GoldConverter';
 import { InvestmentCalculator } from './InvestmentCalculator';
 import { AssetComparator } from './AssetComparator';
+import { HistoricalGoldChart } from './HistoricalGoldChart';
 
 export const ToolsSection = () => {
   return (
@@ -20,6 +21,11 @@ export const ToolsSection = () => {
           <p className="text-muted-foreground font-body">
             Calculadoras y herramientas interactivas para analizar tus inversiones en oro
           </p>
+        </div>
+
+        {/* Historical Chart - Full Width */}
+        <div className="mb-12 animate-fade-in">
+          <HistoricalGoldChart />
         </div>
 
         {/* Tools Grid */}
