@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { TrendingUp, Calendar, Percent } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { useGoldPrice } from './GoldPriceDisplay';
+import { useCurrency } from '@/hooks/useCurrency';
 
 export const InvestmentCalculator = () => {
   const { price } = useGoldPrice();
+  const { symbol, convert } = useCurrency();
   const [investment, setInvestment] = useState<string>('10000');
   const [years, setYears] = useState<string>('5');
   const [annualReturn, setAnnualReturn] = useState<string>('8');
@@ -18,8 +19,9 @@ export const InvestmentCalculator = () => {
     
     const finalValue = principal * Math.pow(1 + rate, numYears);
     const totalReturn = finalValue - principal;
-    const goldOunces = principal / price;
-    const futureGoldValue = goldOunces * price * Math.pow(1 + rate, numYears);
+    const convertedPrice = convert(price);
+    const goldOunces = principal / convertedPrice;
+    const futureGoldValue = goldOunces * convertedPrice * Math.pow(1 + rate, numYears);
     
     return {
       finalValue: finalValue.toFixed(2),
@@ -47,7 +49,7 @@ export const InvestmentCalculator = () => {
         <div className="grid gap-4">
           <div className="space-y-2">
             <label className="text-sm text-muted-foreground font-body flex items-center gap-2">
-              <span>Inversión Inicial (USD)</span>
+              <span>Inversión Inicial ({symbol})</span>
             </label>
             <Input
               type="number"
@@ -95,13 +97,13 @@ export const InvestmentCalculator = () => {
           
           <div className="flex justify-between items-center">
             <span className="text-sm text-muted-foreground font-body">Valor proyectado:</span>
-            <span className="font-heading text-2xl text-gradient-gold">${parseFloat(results.futureGoldValue).toLocaleString()}</span>
+            <span className="font-heading text-2xl text-gradient-gold">{symbol}{parseFloat(results.futureGoldValue).toLocaleString()}</span>
           </div>
           
           <div className="flex justify-between items-center">
             <span className="text-sm text-muted-foreground font-body">Ganancia total:</span>
             <span className="font-body text-green-500">
-              +${parseFloat(results.totalReturn).toLocaleString()} ({results.percentageGain}%)
+              +{symbol}{parseFloat(results.totalReturn).toLocaleString()} ({results.percentageGain}%)
             </span>
           </div>
         </div>
