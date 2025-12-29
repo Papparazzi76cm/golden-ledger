@@ -4,6 +4,7 @@ import { AssetComparator } from './AssetComparator';
 import { HistoricalGoldChart } from './HistoricalGoldChart';
 import { ComparisonChart } from './ComparisonChart';
 import { PriceAlertForm } from './PriceAlertForm';
+import { CurrencySelector } from './CurrencySelector';
 
 export const ToolsSection = () => {
   return (
@@ -20,9 +21,14 @@ export const ToolsSection = () => {
           <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             Toma Decisiones <span className="text-gradient-gold">Informadas</span>
           </h2>
-          <p className="text-muted-foreground font-body">
+          <p className="text-muted-foreground font-body mb-6">
             Calculadoras y herramientas interactivas para analizar tus inversiones en oro
           </p>
+          
+          {/* Currency Selector */}
+          <div className="flex justify-center">
+            <CurrencySelector />
+          </div>
         </div>
 
         {/* Historical Chart - Full Width */}

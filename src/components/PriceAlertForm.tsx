@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useGoldPrice } from './GoldPriceDisplay';
+import { useCurrency } from '@/hooks/useCurrency';
 import { supabase } from '@/integrations/supabase/client';
 
 interface PriceAlert {
@@ -18,6 +19,7 @@ interface PriceAlert {
 
 export const PriceAlertForm = () => {
   const { price: currentPrice } = useGoldPrice();
+  const { symbol, convert, currency } = useCurrency();
   const { toast } = useToast();
   
   const [email, setEmail] = useState('');
@@ -115,7 +117,7 @@ export const PriceAlertForm = () => {
 
       toast({
         title: "Alerta creada",
-        description: `Te notificaremos cuando el oro ${direction === 'above' ? 'supere' : 'baje de'} $${priceValue.toLocaleString()}.`,
+        description: `Te notificaremos cuando el oro ${direction === 'above' ? 'supere' : 'baje de'} ${symbol}${priceValue.toLocaleString()}.`,
       });
     } catch (error) {
       console.error('Error creating alert:', error);
@@ -170,7 +172,7 @@ export const PriceAlertForm = () => {
         <div className="text-center p-4 bg-charcoal/50 rounded-lg border border-gold/10">
           <p className="text-sm text-muted-foreground font-body mb-1">Precio actual</p>
           <p className="font-heading text-2xl text-gold">
-            ${currentPrice.toLocaleString('en-US', { minimumFractionDigits: 2 })} USD/oz
+            {symbol}{convert(currentPrice).toLocaleString('en-US', { minimumFractionDigits: 2 })} {currency}/oz
           </p>
         </div>
 
@@ -194,7 +196,7 @@ export const PriceAlertForm = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm text-muted-foreground font-body">
-                Precio objetivo (USD)
+                Precio objetivo ({currency})
               </label>
               <Input
                 type="number"
@@ -290,7 +292,7 @@ export const PriceAlertForm = () => {
                   </div>
                   <div>
                     <p className="text-sm font-body text-foreground">
-                      {alert.direction === 'above' ? 'Supera' : 'Baja de'} ${Number(alert.target_price).toLocaleString()}
+                      {alert.direction === 'above' ? 'Supera' : 'Baja de'} {symbol}{Number(convert(alert.target_price)).toLocaleString()}
                     </p>
                     <p className="text-xs text-muted-foreground font-body truncate max-w-[120px]">
                       {alert.email}
