@@ -1,6 +1,7 @@
 import { BookOpen, Shield, TrendingUp, Landmark, Globe, Award } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/hooks/useLanguage';
+import goldAbstract from '@/assets/gold-abstract.jpg';
 
 export const FeaturesSection = () => {
   const { t } = useLanguage();
@@ -15,8 +16,18 @@ export const FeaturesSection = () => {
   ];
 
   return (
-    <section className="py-24 relative bg-charcoal-light/50">
-      <div className="container mx-auto px-4">
+    <section className="py-24 relative bg-charcoal-light/50 overflow-hidden">
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <img 
+          src={goldAbstract} 
+          alt="Gold abstract background" 
+          className="w-full h-full object-cover opacity-10"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
+      </div>
+      
+      <div className="container mx-auto px-4 relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <span className="inline-block px-4 py-1 rounded-full bg-gold/10 text-gold text-sm font-body mb-4">
             {t.features.badge}

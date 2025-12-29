@@ -6,12 +6,21 @@ import { ComparisonChart } from './ComparisonChart';
 import { PriceAlertForm } from './PriceAlertForm';
 import { CurrencySelector } from './CurrencySelector';
 import { useLanguage } from '@/hooks/useLanguage';
+import goldTrading from '@/assets/gold-trading.jpg';
 
 export const ToolsSection = () => {
   const { t } = useLanguage();
   
   return (
-    <section id="herramientas" className="py-24 relative">
+    <section id="herramientas" className="py-24 relative overflow-hidden">
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <img 
+          src={goldTrading} 
+          alt="Gold trading" 
+          className="w-full h-full object-cover opacity-5"
+        />
+      </div>
       {/* Background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_hsl(43_74%_49%_/_0.03)_0%,_transparent_70%)]" />
       

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/useLanguage';
+import goldVault from '@/assets/gold-vault.jpg';
 
 export const NewsletterSection = () => {
   const [email, setEmail] = useState('');
@@ -24,7 +25,16 @@ export const NewsletterSection = () => {
 
   return (
     <section className="py-24 relative overflow-hidden">
-      {/* Background */}
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <img 
+          src={goldVault} 
+          alt="Gold vault" 
+          className="w-full h-full object-cover opacity-20"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background" />
+      </div>
+      {/* Background Overlays */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold/5 to-transparent" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_hsl(43_74%_49%_/_0.1)_0%,_transparent_50%)]" />
       
