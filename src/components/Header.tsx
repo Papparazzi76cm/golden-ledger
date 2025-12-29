@@ -3,33 +3,36 @@ import { Link } from 'react-router-dom';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { GoldPriceDisplay } from './GoldPriceDisplay';
-
-const navLinks = [
-  { 
-    label: 'Aprender', 
-    href: '#aprender',
-    submenu: [
-      { label: 'Guía del Oro', href: '#guia' },
-      { label: 'Historia del Oro', href: '#historia' },
-      { label: 'Glosario', href: '#glosario' },
-    ]
-  },
-  { 
-    label: 'Herramientas', 
-    href: '#herramientas',
-    submenu: [
-      { label: 'Calculadora', href: '#calculadora' },
-      { label: 'Conversor', href: '#conversor' },
-      { label: 'Comparador', href: '#comparador' },
-    ]
-  },
-  { label: 'Mercados', href: '#mercados' },
-  { label: 'Blog', href: '#blog' },
-];
+import { LanguageSelector } from './LanguageSelector';
+import { useLanguage } from '@/hooks/useLanguage';
 
 export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { t } = useLanguage();
+
+  const navLinks = [
+    { 
+      label: t.nav.learn, 
+      href: '#aprender',
+      submenu: [
+        { label: t.nav.goldGuide, href: '#guia' },
+        { label: t.nav.goldHistory, href: '#historia' },
+        { label: t.nav.glossary, href: '#glosario' },
+      ]
+    },
+    { 
+      label: t.nav.tools, 
+      href: '#herramientas',
+      submenu: [
+        { label: t.nav.calculator, href: '#calculadora' },
+        { label: t.nav.converter, href: '#conversor' },
+        { label: t.nav.comparator, href: '#comparador' },
+      ]
+    },
+    { label: t.nav.markets, href: '#mercados' },
+    { label: t.nav.blog, href: '#blog' },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,7 +52,6 @@ export const Header = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
             <div className="w-10 h-10 rounded-full bg-gradient-gold flex items-center justify-center shadow-gold group-hover:shadow-gold-lg transition-all duration-300">
               <span className="text-charcoal-dark font-heading font-bold text-xl">Au</span>
@@ -59,7 +61,6 @@ export const Header = () => {
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
               <div key={link.label} className="relative group">
@@ -90,17 +91,16 @@ export const Header = () => {
             ))}
           </nav>
 
-          {/* Right Section */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <LanguageSelector />
             <div className="hidden md:block">
               <GoldPriceDisplay size="sm" showChange={false} />
             </div>
             
             <Button variant="gold-outline" size="sm" className="hidden sm:flex">
-              Alertas
+              {t.nav.alerts}
             </Button>
 
-            {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="lg:hidden p-2 text-foreground hover:text-gold transition-colors"
@@ -111,7 +111,6 @@ export const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-charcoal-dark/98 backdrop-blur-md border-t border-gold/10">
           <nav className="container mx-auto px-4 py-6 space-y-4">
