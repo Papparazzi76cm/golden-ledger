@@ -5,8 +5,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { NewsletterSection } from '@/components/NewsletterSection';
-import { getArticleBySlug, getRecentArticles, Article } from '@/data/articles';
+import { getArticleBySlug, getRecentArticles } from '@/data/articles';
+import { getArticleImage } from '@/data/articleImages';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/hooks/useLanguage';
 
 // Simple markdown renderer component
 const MarkdownContent = ({ content }: { content: string }) => {
@@ -175,6 +177,7 @@ const ArticlePage = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLanguage();
   
   const article = slug ? getArticleBySlug(slug) : undefined;
   const recentArticles = getRecentArticles(3).filter(a => a.slug !== slug);
@@ -186,13 +189,13 @@ const ArticlePage = () => {
         <main className="pt-32 pb-16">
           <div className="container mx-auto px-4 text-center">
             <h1 className="font-heading text-3xl font-bold text-foreground mb-4">
-              Artículo no encontrado
+              {t.blog.articleNotFound}
             </h1>
             <p className="text-muted-foreground font-body mb-8">
-              El artículo que buscas no existe o ha sido movido.
+              {t.blog.articleNotFoundDesc}
             </p>
             <Button variant="gold" onClick={() => navigate('/blog')}>
-              Volver al Blog
+              {t.blog.backToBlog}
             </Button>
           </div>
         </main>
@@ -204,15 +207,15 @@ const ArticlePage = () => {
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
     toast({
-      title: "Enlace copiado",
-      description: "El enlace del artículo ha sido copiado al portapapeles.",
+      title: t.blog.linkCopied,
+      description: t.blog.linkCopiedDesc,
     });
   };
 
   const handleBookmark = () => {
     toast({
-      title: "Artículo guardado",
-      description: "El artículo ha sido añadido a tus favoritos.",
+      title: t.blog.articleSaved,
+      description: t.blog.articleSavedDesc,
     });
   };
 
@@ -221,12 +224,22 @@ const ArticlePage = () => {
       <Header />
       
       <main className="pt-24">
+        {/* Hero Image */}
+        <div className="w-full h-64 md:h-96 relative overflow-hidden">
+          <img 
+            src={getArticleImage(article.slug)}
+            alt={article.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+        </div>
+
         {/* Breadcrumb */}
         <div className="border-b border-gold/10">
           <div className="container mx-auto px-4 py-4">
             <nav className="flex items-center gap-2 text-sm font-body">
               <Link to="/" className="text-muted-foreground hover:text-gold transition-colors">
-                Inicio
+                {t.common.home}
               </Link>
               <ChevronRight className="w-4 h-4 text-muted-foreground" />
               <Link to="/blog" className="text-muted-foreground hover:text-gold transition-colors">
@@ -249,7 +262,7 @@ const ArticlePage = () => {
                 className="mb-6 text-muted-foreground hover:text-gold"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Volver al Blog
+                {t.blog.backToBlog}
               </Button>
 
               <span className="inline-block px-4 py-1 rounded-full bg-gold/10 text-gold text-sm font-body mb-6">
@@ -275,7 +288,7 @@ const ArticlePage = () => {
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground font-body">
                   <Clock className="w-4 h-4" />
-                  <span>{article.readTime} de lectura</span>
+                  <span>{article.readTime} {t.blog.readTime}</span>
                 </div>
 
                 <div className="flex items-center gap-2 ml-auto">
@@ -299,7 +312,7 @@ const ArticlePage = () => {
 
               {/* Tags */}
               <div className="mt-12 pt-8 border-t border-gold/10">
-                <h4 className="font-heading text-lg font-semibold text-foreground mb-4">Etiquetas</h4>
+                <h4 className="font-heading text-lg font-semibold text-foreground mb-4">{t.blog.tags}</h4>
                 <div className="flex flex-wrap gap-2">
                   {article.tags.map(tag => (
                     <span 
@@ -316,12 +329,12 @@ const ArticlePage = () => {
               <div className="mt-8 p-6 rounded-xl bg-charcoal-light/50 border border-gold/10">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="font-heading text-lg font-semibold text-foreground mb-1">¿Te ha resultado útil?</h4>
-                    <p className="text-sm text-muted-foreground font-body">Compártelo con otros inversores</p>
+                    <h4 className="font-heading text-lg font-semibold text-foreground mb-1">{t.blog.wasUseful}</h4>
+                    <p className="text-sm text-muted-foreground font-body">{t.blog.shareWithOthers}</p>
                   </div>
                   <Button variant="gold-outline" onClick={handleShare}>
                     <Share2 className="w-4 h-4 mr-2" />
-                    Compartir
+                    {t.blog.share}
                   </Button>
                 </div>
               </div>
@@ -333,13 +346,21 @@ const ArticlePage = () => {
         <section className="py-16 bg-charcoal-light/30">
           <div className="container mx-auto px-4">
             <h2 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-8">
-              Artículos Relacionados
+              {t.blog.relatedArticles}
             </h2>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {recentArticles.map(relatedArticle => (
                 <Link key={relatedArticle.slug} to={`/blog/${relatedArticle.slug}`}>
-                  <Card variant="premium" className="group h-full">
+                  <Card variant="premium" className="group h-full overflow-hidden">
+                    <div className="h-40 relative overflow-hidden">
+                      <img 
+                        src={getArticleImage(relatedArticle.slug)}
+                        alt={relatedArticle.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
+                    </div>
                     <CardContent className="p-6">
                       <span className="inline-block px-3 py-1 rounded-full bg-gold/10 text-gold text-xs font-body mb-3">
                         {relatedArticle.category}

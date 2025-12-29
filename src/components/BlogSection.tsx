@@ -4,12 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { getRecentArticles } from '@/data/articles';
 import { useLanguage } from '@/hooks/useLanguage';
-import goldCoins from '@/assets/gold-coins.jpg';
-import goldChart from '@/assets/gold-chart.jpg';
-import goldTrading from '@/assets/gold-trading.jpg';
-import goldVault from '@/assets/gold-vault.jpg';
-
-const articleImages = [goldCoins, goldChart, goldTrading, goldVault];
+import { getArticleImage } from '@/data/articleImages';
 
 export const BlogSection = () => {
   const { t } = useLanguage();
@@ -51,7 +46,7 @@ export const BlogSection = () => {
                   {/* Featured Image */}
                   <div className="h-64 relative overflow-hidden">
                     <img 
-                      src={goldCoins} 
+                      src={getArticleImage(featuredArticle.slug)} 
                       alt={featuredArticle.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
@@ -85,7 +80,7 @@ export const BlogSection = () => {
 
           {/* Other Articles */}
           <div className="space-y-4">
-            {otherArticles.map((article, index) => (
+            {otherArticles.map((article) => (
               <Link key={article.slug} to={`/blog/${article.slug}`}>
                 <Card 
                   variant="ghost"
@@ -94,7 +89,7 @@ export const BlogSection = () => {
                   <div className="flex gap-4">
                     <div className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden">
                       <img 
-                        src={articleImages[(index + 1) % articleImages.length]}
+                        src={getArticleImage(article.slug)}
                         alt={article.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       />
