@@ -6,8 +6,11 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { NewsletterSection } from '@/components/NewsletterSection';
 import { articles, getAllCategories, getFeaturedArticle } from '@/data/articles';
+import { getArticleImage } from '@/data/articleImages';
+import { useLanguage } from '@/hooks/useLanguage';
 
 const Blog = () => {
+  const { t } = useLanguage();
   const featuredArticle = getFeaturedArticle();
   const categories = getAllCategories();
   const regularArticles = articles.filter(a => !a.featured);
@@ -23,14 +26,13 @@ const Blog = () => {
           <div className="container mx-auto px-4 relative z-10">
             <div className="text-center max-w-3xl mx-auto">
               <span className="inline-block px-4 py-1 rounded-full bg-gold/10 text-gold text-sm font-body mb-4">
-                Blog & Educación
+                {t.blog.badge}
               </span>
               <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-                Aprende a Invertir en <span className="text-gradient-gold">Oro</span>
+                {t.blog.title1} <span className="text-gradient-gold">{t.blog.titleHighlight}</span>
               </h1>
               <p className="text-lg text-muted-foreground font-body">
-                Guías completas, análisis de mercado y estrategias de inversión 
-                para tomar decisiones informadas.
+                {t.blog.subtitle}
               </p>
             </div>
           </div>
@@ -44,7 +46,7 @@ const Blog = () => {
                 to="/blog"
                 className="px-4 py-2 rounded-full bg-gold text-charcoal-dark text-sm font-body font-medium transition-all"
               >
-                Todos
+                {t.common.all}
               </Link>
               {categories.map(category => (
                 <button
@@ -66,10 +68,13 @@ const Blog = () => {
                 <Card variant="premium" className="group overflow-hidden">
                   <div className="grid lg:grid-cols-2 gap-0">
                     {/* Image */}
-                    <div className="h-64 lg:h-auto bg-gradient-to-br from-gold/20 to-gold/5 flex items-center justify-center">
-                      <div className="w-32 h-32 rounded-full bg-gold/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                        <span className="font-heading text-6xl text-gold">Au</span>
-                      </div>
+                    <div className="h-64 lg:h-auto relative overflow-hidden">
+                      <img 
+                        src={getArticleImage(featuredArticle.slug)}
+                        alt={featuredArticle.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-r from-card/80 to-transparent lg:bg-none" />
                     </div>
                     
                     {/* Content */}
@@ -79,7 +84,7 @@ const Blog = () => {
                           {featuredArticle.category}
                         </span>
                         <span className="px-3 py-1 rounded-full bg-gold text-charcoal-dark text-xs font-body font-medium">
-                          Destacado
+                          {t.blog.featured}
                         </span>
                       </div>
                       
@@ -107,7 +112,7 @@ const Blog = () => {
                       </div>
                       
                       <Button variant="gold" className="w-fit">
-                        Leer Artículo
+                        {t.blog.readArticle}
                         <ArrowRight className="w-4 h-4" />
                       </Button>
                     </CardContent>
@@ -122,7 +127,7 @@ const Blog = () => {
         <section className="py-16 bg-charcoal-light/30">
           <div className="container mx-auto px-4">
             <h2 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-8">
-              Últimos Artículos
+              {t.blog.latestArticles}
             </h2>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -135,10 +140,13 @@ const Blog = () => {
                 >
                   <Card variant="premium" className="group h-full flex flex-col overflow-hidden">
                     {/* Image */}
-                    <div className="h-48 bg-gradient-to-br from-gold/15 to-gold/5 flex items-center justify-center">
-                      <div className="w-16 h-16 rounded-full bg-gold/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <span className="font-heading text-2xl text-gold">Au</span>
-                      </div>
+                    <div className="h-48 relative overflow-hidden">
+                      <img 
+                        src={getArticleImage(article.slug)}
+                        alt={article.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
                     </div>
                     
                     {/* Content */}

@@ -154,6 +154,22 @@ export interface Translations {
     titleHighlight: string;
     viewAll: string;
     readTime: string;
+    subtitle: string;
+    featured: string;
+    readArticle: string;
+    latestArticles: string;
+    articleNotFound: string;
+    articleNotFoundDesc: string;
+    backToBlog: string;
+    linkCopied: string;
+    linkCopiedDesc: string;
+    articleSaved: string;
+    articleSavedDesc: string;
+    tags: string;
+    wasUseful: string;
+    shareWithOthers: string;
+    share: string;
+    relatedArticles: string;
   };
   
   // Newsletter Section
@@ -215,6 +231,7 @@ export interface Translations {
     selected: string;
     currency: string;
     language: string;
+    home: string;
   };
 }
 
@@ -369,7 +386,23 @@ export const translations: Record<Language, Translations> = {
       title1: 'Conocimiento que',
       titleHighlight: 'Multiplica',
       viewAll: 'Ver todos los artículos',
-      readTime: 'min de lectura',
+      readTime: 'de lectura',
+      subtitle: 'Guías completas, análisis de mercado y estrategias de inversión para tomar decisiones informadas.',
+      featured: 'Destacado',
+      readArticle: 'Leer Artículo',
+      latestArticles: 'Últimos Artículos',
+      articleNotFound: 'Artículo no encontrado',
+      articleNotFoundDesc: 'El artículo que buscas no existe o ha sido movido.',
+      backToBlog: 'Volver al Blog',
+      linkCopied: 'Enlace copiado',
+      linkCopiedDesc: 'El enlace del artículo ha sido copiado al portapapeles.',
+      articleSaved: 'Artículo guardado',
+      articleSavedDesc: 'El artículo ha sido añadido a tus favoritos.',
+      tags: 'Etiquetas',
+      wasUseful: '¿Te ha resultado útil?',
+      shareWithOthers: 'Compártelo con otros inversores',
+      share: 'Compartir',
+      relatedArticles: 'Artículos Relacionados',
     },
     newsletter: {
       title1: 'No te Pierdas',
@@ -423,6 +456,7 @@ export const translations: Record<Language, Translations> = {
       selected: 'Seleccionado',
       currency: 'Moneda',
       language: 'Idioma',
+      home: 'Inicio',
     },
   },
   

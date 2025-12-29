@@ -9,6 +9,7 @@ export interface Article {
   featured?: boolean;
   content: string;
   tags: string[];
+  image?: string;
 }
 
 export const articles: Article[] = [
@@ -22,6 +23,7 @@ export const articles: Article[] = [
     date: "2024-12-15",
     featured: true,
     tags: ["comprar oro", "oro físico", "principiantes", "guía"],
+    image: "/src/assets/article-buying-gold.jpg",
     content: `
 ## Introducción al Oro Físico
 
@@ -139,6 +141,7 @@ Comprar oro físico es una decisión financiera significativa que requiere educa
     date: "2024-12-10",
     featured: false,
     tags: ["inflación", "poder adquisitivo", "análisis", "historia"],
+    image: "/src/assets/article-inflation.jpg",
     content: `
 ## La Naturaleza de la Inflación
 
@@ -229,6 +232,7 @@ El oro ha demostrado durante siglos su capacidad para preservar el poder adquisi
     date: "2024-12-05",
     featured: false,
     tags: ["cartera", "diversificación", "estrategia", "asignación"],
+    image: "/src/assets/article-portfolio.jpg",
     content: `
 ## El Rol del Oro en una Cartera Diversificada
 
@@ -335,6 +339,7 @@ No existe una respuesta única. La asignación óptima depende de tu perfil de r
     date: "2024-12-01",
     featured: false,
     tags: ["mercados", "precio", "análisis", "2024"],
+    image: "/src/assets/article-price-factors.jpg",
     content: `
 ## Panorama del Mercado del Oro en 2024
 
@@ -450,6 +455,7 @@ El oro en 2024 se beneficia de una confluencia de factores: geopolítica inciert
     date: "2024-11-25",
     featured: false,
     tags: ["tipos de oro", "ETFs", "mineras", "lingotes", "monedas"],
+    image: "/src/assets/article-gold-types.jpg",
     content: `
 ## Introducción
 
@@ -610,6 +616,7 @@ No hay una opción universalmente mejor. La elección depende de tus objetivos, 
     date: "2024-11-20",
     featured: false,
     tags: ["almacenamiento", "seguridad", "bóvedas", "cajas fuertes"],
+    image: "/src/assets/article-storage.jpg",
     content: `
 ## La Importancia del Almacenamiento
 
