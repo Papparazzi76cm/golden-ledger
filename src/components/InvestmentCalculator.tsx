@@ -4,10 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useGoldPrice } from './GoldPriceDisplay';
 import { useCurrency } from '@/hooks/useCurrency';
+import { useLanguage } from '@/hooks/useLanguage';
 
 export const InvestmentCalculator = () => {
   const { price } = useGoldPrice();
   const { symbol, convert } = useCurrency();
+  const { t } = useLanguage();
   const [investment, setInvestment] = useState<string>('10000');
   const [years, setYears] = useState<string>('5');
   const [annualReturn, setAnnualReturn] = useState<string>('8');
@@ -40,16 +42,16 @@ export const InvestmentCalculator = () => {
         <div className="mx-auto w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center mb-4">
           <TrendingUp className="w-6 h-6 text-gold" />
         </div>
-        <CardTitle className="text-xl">Calculadora de Rentabilidad</CardTitle>
+        <CardTitle className="text-xl">{t.investmentCalculator.title}</CardTitle>
         <p className="text-sm text-muted-foreground font-body">
-          Simula el crecimiento de tu inversión en oro
+          {t.investmentCalculator.subtitle}
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid gap-4">
           <div className="space-y-2">
             <label className="text-sm text-muted-foreground font-body flex items-center gap-2">
-              <span>Inversión Inicial ({symbol})</span>
+              <span>{t.investmentCalculator.initialInvestment} ({symbol})</span>
             </label>
             <Input
               type="number"
@@ -63,7 +65,7 @@ export const InvestmentCalculator = () => {
             <div className="space-y-2">
               <label className="text-sm text-muted-foreground font-body flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
-                <span>Años</span>
+                <span>{t.investmentCalculator.years}</span>
               </label>
               <Input
                 type="number"
@@ -76,7 +78,7 @@ export const InvestmentCalculator = () => {
             <div className="space-y-2">
               <label className="text-sm text-muted-foreground font-body flex items-center gap-2">
                 <Percent className="w-4 h-4" />
-                <span>Retorno anual</span>
+                <span>{t.investmentCalculator.annualReturn}</span>
               </label>
               <Input
                 type="number"
@@ -91,17 +93,17 @@ export const InvestmentCalculator = () => {
         {/* Results */}
         <div className="pt-6 border-t border-gold/10 space-y-4">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground font-body">Onzas de oro:</span>
+            <span className="text-sm text-muted-foreground font-body">{t.investmentCalculator.goldOunces}:</span>
             <span className="font-heading text-lg text-foreground">{results.goldOunces} oz</span>
           </div>
           
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground font-body">Valor proyectado:</span>
+            <span className="text-sm text-muted-foreground font-body">{t.investmentCalculator.projectedValue}:</span>
             <span className="font-heading text-2xl text-gradient-gold">{symbol}{parseFloat(results.futureGoldValue).toLocaleString()}</span>
           </div>
           
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground font-body">Ganancia total:</span>
+            <span className="text-sm text-muted-foreground font-body">{t.investmentCalculator.totalGain}:</span>
             <span className="font-body text-green-500">
               +{symbol}{parseFloat(results.totalReturn).toLocaleString()} ({results.percentageGain}%)
             </span>
@@ -109,7 +111,7 @@ export const InvestmentCalculator = () => {
         </div>
 
         <p className="text-xs text-muted-foreground text-center font-body pt-4">
-          * Simulación basada en rendimiento histórico. Resultados pasados no garantizan rendimientos futuros.
+          {t.investmentCalculator.disclaimer}
         </p>
       </CardContent>
     </Card>

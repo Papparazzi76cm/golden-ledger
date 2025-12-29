@@ -1,42 +1,33 @@
 import { useState, useMemo } from 'react';
 import { 
-  AreaChart, 
-  Area, 
   XAxis, 
   YAxis, 
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer,
-  Legend,
   LineChart,
   Line
 } from 'recharts';
-import { TrendingUp, Calendar, BarChart3 } from 'lucide-react';
+import { BarChart3 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getMultiAssetDataForPeriod, normalizeData, AssetDataPoint } from '@/data/multiAssetData';
+import { useLanguage } from '@/hooks/useLanguage';
 
 type TimePeriod = 5 | 10 | 25 | 50;
 type ViewMode = 'absolute' | 'comparison';
 
-const periodLabels: { [key in TimePeriod]: string } = {
-  5: '5 Años',
-  10: '10 Años',
-  25: '25 Años',
-  50: '50 Años'
-};
-
 interface AssetConfig {
   key: string;
-  name: string;
+  nameKey: 'gold' | 'sp500' | 'bitcoin' | 'inflation';
   color: string;
   colorLight: string;
 }
 
 const assetConfigs: AssetConfig[] = [
-  { key: 'gold', name: 'Oro', color: 'hsl(43, 74%, 49%)', colorLight: 'hsl(43, 80%, 65%)' },
-  { key: 'sp500', name: 'S&P 500', color: 'hsl(210, 100%, 50%)', colorLight: 'hsl(210, 100%, 70%)' },
-  { key: 'bitcoin', name: 'Bitcoin', color: 'hsl(25, 100%, 50%)', colorLight: 'hsl(25, 100%, 70%)' },
-  { key: 'inflation', name: 'Inflación (IPC)', color: 'hsl(280, 70%, 50%)', colorLight: 'hsl(280, 70%, 70%)' },
+  { key: 'gold', nameKey: 'gold', color: 'hsl(43, 74%, 49%)', colorLight: 'hsl(43, 80%, 65%)' },
+  { key: 'sp500', nameKey: 'sp500', color: 'hsl(210, 100%, 50%)', colorLight: 'hsl(210, 100%, 70%)' },
+  { key: 'bitcoin', nameKey: 'bitcoin', color: 'hsl(25, 100%, 50%)', colorLight: 'hsl(25, 100%, 70%)' },
+  { key: 'inflation', nameKey: 'inflation', color: 'hsl(280, 70%, 50%)', colorLight: 'hsl(280, 70%, 70%)' },
 ];
 
 interface CustomTooltipProps {
@@ -75,9 +66,17 @@ const CustomTooltip = ({ active, payload, label, viewMode }: CustomTooltipProps)
 };
 
 export const ComparisonChart = () => {
+  const { t } = useLanguage();
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>(10);
   const [viewMode, setViewMode] = useState<ViewMode>('comparison');
   const [activeAssets, setActiveAssets] = useState<Set<string>>(new Set(['gold', 'sp500']));
+  
+  const periodLabels: { [key in TimePeriod]: string } = {
+    5: `5 ${t.historicalChart.years}`,
+    10: `10 ${t.historicalChart.years}`,
+    25: `25 ${t.historicalChart.years}`,
+    50: `50 ${t.historicalChart.years}`
+  };
   
   const rawData = useMemo(() => getMultiAssetDataForPeriod(selectedPeriod), [selectedPeriod]);
   
@@ -136,12 +135,12 @@ export const ComparisonChart = () => {
                 <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
                   <BarChart3 className="w-5 h-5 text-gold" />
                 </div>
-                Comparativa de Activos
+                {t.comparisonChart.title}
               </CardTitle>
               <p className="text-muted-foreground font-body mt-2">
                 {viewMode === 'comparison' 
-                  ? 'Rendimiento porcentual desde inicio del período'
-                  : 'Valores absolutos en USD'
+                  ? t.comparisonChart.subtitle
+                  : t.comparisonChart.viewMode.absolute
                 }
               </p>
             </div>
@@ -156,7 +155,7 @@ export const ComparisonChart = () => {
                     : 'bg-charcoal-light text-muted-foreground hover:text-foreground border border-gold/10'
                 }`}
               >
-                % Rendimiento
+                % {t.comparisonChart.performance}
               </button>
               <button
                 onClick={() => setViewMode('absolute')}
@@ -166,7 +165,7 @@ export const ComparisonChart = () => {
                     : 'bg-charcoal-light text-muted-foreground hover:text-foreground border border-gold/10'
                 }`}
               >
-                Valor Absoluto
+                {t.comparisonChart.viewMode.absolute}
               </button>
             </div>
           </div>
@@ -210,7 +209,7 @@ export const ComparisonChart = () => {
                     className="w-2 h-2 rounded-full"
                     style={{ backgroundColor: asset.color }}
                   />
-                  {asset.name}
+                  {t.comparisonChart.assets[asset.nameKey]}
                 </button>
               ))}
             </div>
@@ -268,7 +267,7 @@ export const ComparisonChart = () => {
                     key={asset.key}
                     type="monotone"
                     dataKey={asset.key}
-                    name={asset.name}
+                    name={t.comparisonChart.assets[asset.nameKey]}
                     stroke={asset.color}
                     strokeWidth={2.5}
                     dot={false}
@@ -305,7 +304,7 @@ export const ComparisonChart = () => {
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: asset.color }}
                     />
-                    <span className="text-sm text-muted-foreground font-body">{asset.name}</span>
+                    <span className="text-sm text-muted-foreground font-body">{t.comparisonChart.assets[asset.nameKey]}</span>
                   </div>
                   <p 
                     className="font-heading text-2xl"
@@ -321,7 +320,7 @@ export const ComparisonChart = () => {
 
         {/* Disclaimer */}
         <p className="text-xs text-muted-foreground text-center font-body pt-2">
-          Datos históricos aproximados. Bitcoin disponible desde 2009. No constituye asesoramiento financiero.
+          {t.comparisonChart.disclaimer}
         </p>
       </CardContent>
     </Card>

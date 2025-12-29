@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown } from 'lucide-react';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface GoldPriceData {
   price: number;
@@ -50,6 +51,7 @@ export const GoldPriceDisplay = ({
   className = '' 
 }: GoldPriceDisplayProps) => {
   const { price, change, changePercent } = useGoldPrice();
+  const { t } = useLanguage();
   const isPositive = change >= 0;
 
   const sizeClasses = {
@@ -71,7 +73,7 @@ export const GoldPriceDisplay = ({
           ${price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
         </span>
         <span className={`${changeSizeClasses[size]} text-muted-foreground font-body`}>
-          USD/oz
+          USD{t.goldPrice.perOunce}
         </span>
       </div>
       
@@ -85,7 +87,7 @@ export const GoldPriceDisplay = ({
           <span className={isPositive ? 'text-green-500' : 'text-red-500'}>
             {isPositive ? '+' : ''}{change.toFixed(2)} ({changePercent.toFixed(2)}%)
           </span>
-          <span className="text-muted-foreground">hoy</span>
+          <span className="text-muted-foreground">{t.goldPrice.change24h}</span>
         </div>
       )}
     </div>

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useGoldPrice } from './GoldPriceDisplay';
 import { useCurrency } from '@/hooks/useCurrency';
+import { useLanguage } from '@/hooks/useLanguage';
 import { supabase } from '@/integrations/supabase/client';
 
 interface PriceAlert {
@@ -20,6 +21,7 @@ interface PriceAlert {
 export const PriceAlertForm = () => {
   const { price: currentPrice } = useGoldPrice();
   const { symbol, convert, currency } = useCurrency();
+  const { t } = useLanguage();
   const { toast } = useToast();
   
   const [email, setEmail] = useState('');
@@ -61,8 +63,8 @@ export const PriceAlertForm = () => {
     
     if (!email || !targetPrice) {
       toast({
-        title: "Campos requeridos",
-        description: "Por favor completa todos los campos.",
+        title: t.priceAlert.requiredFields,
+        description: t.priceAlert.requiredFieldsDesc,
         variant: "destructive",
       });
       return;
@@ -72,8 +74,8 @@ export const PriceAlertForm = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       toast({
-        title: "Email inválido",
-        description: "Por favor introduce un email válido.",
+        title: t.priceAlert.invalidEmail,
+        description: t.priceAlert.invalidEmailDesc,
         variant: "destructive",
       });
       return;
@@ -82,8 +84,8 @@ export const PriceAlertForm = () => {
     const priceValue = parseFloat(targetPrice);
     if (isNaN(priceValue) || priceValue <= 0) {
       toast({
-        title: "Precio inválido",
-        description: "Por favor introduce un precio válido.",
+        title: t.priceAlert.invalidPrice,
+        description: t.priceAlert.invalidPriceDesc,
         variant: "destructive",
       });
       return;
@@ -112,18 +114,17 @@ export const PriceAlertForm = () => {
       setAlerts(prev => [typedAlert, ...prev]);
       setEmail('');
       setTargetPrice('');
-      setEmail('');
-      setTargetPrice('');
 
+      const directionText = direction === 'above' ? t.priceAlert.exceeds : t.priceAlert.dropsBelow;
       toast({
-        title: "Alerta creada",
-        description: `Te notificaremos cuando el oro ${direction === 'above' ? 'supere' : 'baje de'} ${symbol}${priceValue.toLocaleString()}.`,
+        title: t.priceAlert.alertCreated,
+        description: `${t.priceAlert.alertCreatedDesc} ${directionText} ${symbol}${priceValue.toLocaleString()}.`,
       });
     } catch (error) {
       console.error('Error creating alert:', error);
       toast({
-        title: "Error",
-        description: "No se pudo crear la alerta. Inténtalo de nuevo.",
+        title: t.priceAlert.error,
+        description: t.priceAlert.errorDesc,
         variant: "destructive",
       });
     } finally {
@@ -142,14 +143,14 @@ export const PriceAlertForm = () => {
 
       setAlerts(prev => prev.filter(a => a.id !== id));
       toast({
-        title: "Alerta eliminada",
-        description: "La alerta de precio ha sido eliminada.",
+        title: t.priceAlert.alertDeleted,
+        description: t.priceAlert.alertDeletedDesc,
       });
     } catch (error) {
       console.error('Error deleting alert:', error);
       toast({
-        title: "Error",
-        description: "No se pudo eliminar la alerta.",
+        title: t.priceAlert.error,
+        description: t.priceAlert.errorDesc,
         variant: "destructive",
       });
     }
@@ -161,16 +162,16 @@ export const PriceAlertForm = () => {
         <div className="mx-auto w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center mb-4 animate-gold-pulse">
           <Bell className="w-6 h-6 text-gold" />
         </div>
-        <CardTitle className="text-xl">Alertas de Precio</CardTitle>
+        <CardTitle className="text-xl">{t.priceAlert.title}</CardTitle>
         <p className="text-sm text-muted-foreground font-body">
-          Recibe un email cuando el oro alcance tu precio objetivo
+          {t.priceAlert.subtitle}
         </p>
       </CardHeader>
       
       <CardContent className="space-y-6">
         {/* Current Price Display */}
         <div className="text-center p-4 bg-charcoal/50 rounded-lg border border-gold/10">
-          <p className="text-sm text-muted-foreground font-body mb-1">Precio actual</p>
+          <p className="text-sm text-muted-foreground font-body mb-1">{t.priceAlert.currentPrice}</p>
           <p className="font-heading text-2xl text-gold">
             {symbol}{convert(currentPrice).toLocaleString('en-US', { minimumFractionDigits: 2 })} {currency}/oz
           </p>
@@ -181,7 +182,7 @@ export const PriceAlertForm = () => {
           <div className="space-y-2">
             <label className="text-sm text-muted-foreground font-body flex items-center gap-2">
               <Mail className="w-4 h-4" />
-              Email para notificaciones
+              {t.priceAlert.email}
             </label>
             <Input
               type="email"
@@ -196,7 +197,7 @@ export const PriceAlertForm = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm text-muted-foreground font-body">
-                Precio objetivo ({currency})
+                {t.priceAlert.targetPrice} ({currency})
               </label>
               <Input
                 type="number"
@@ -212,7 +213,7 @@ export const PriceAlertForm = () => {
 
             <div className="space-y-2">
               <label className="text-sm text-muted-foreground font-body">
-                Condición
+                {t.priceAlert.condition}
               </label>
               <div className="flex gap-2">
                 <button
@@ -225,7 +226,7 @@ export const PriceAlertForm = () => {
                   }`}
                 >
                   <TrendingUp className="w-4 h-4" />
-                  Sube
+                  {t.priceAlert.above}
                 </button>
                 <button
                   type="button"
@@ -237,7 +238,7 @@ export const PriceAlertForm = () => {
                   }`}
                 >
                   <TrendingDown className="w-4 h-4" />
-                  Baja
+                  {t.priceAlert.below}
                 </button>
               </div>
             </div>
@@ -252,12 +253,12 @@ export const PriceAlertForm = () => {
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Creando alerta...
+                {t.priceAlert.creatingAlert}
               </>
             ) : (
               <>
                 <Plus className="w-4 h-4" />
-                Crear Alerta
+                {t.priceAlert.createAlert}
               </>
             )}
           </Button>
@@ -272,7 +273,7 @@ export const PriceAlertForm = () => {
           <div className="space-y-3 pt-4 border-t border-gold/10">
             <h4 className="text-sm font-semibold text-foreground font-body flex items-center gap-2">
               <CheckCircle className="w-4 h-4 text-gold" />
-              Alertas activas ({alerts.length})
+              {t.priceAlert.activeAlerts} ({alerts.length})
             </h4>
             
             {alerts.slice(0, 5).map(alert => (
@@ -292,7 +293,7 @@ export const PriceAlertForm = () => {
                   </div>
                   <div>
                     <p className="text-sm font-body text-foreground">
-                      {alert.direction === 'above' ? 'Supera' : 'Baja de'} {symbol}{Number(convert(alert.target_price)).toLocaleString()}
+                      {alert.direction === 'above' ? t.priceAlert.exceeds : t.priceAlert.dropsBelow} {symbol}{Number(convert(alert.target_price)).toLocaleString()}
                     </p>
                     <p className="text-xs text-muted-foreground font-body truncate max-w-[120px]">
                       {alert.email}
@@ -311,7 +312,7 @@ export const PriceAlertForm = () => {
         )}
 
         <p className="text-xs text-muted-foreground text-center font-body">
-          Las alertas se envían una vez cuando se alcanza el precio objetivo.
+          {t.priceAlert.disclaimer}
         </p>
       </CardContent>
     </Card>

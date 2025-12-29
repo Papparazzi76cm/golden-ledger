@@ -3,19 +3,21 @@ import { Bell, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/hooks/useLanguage';
 
 export const NewsletterSection = () => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
       setIsSubmitted(true);
       toast({
-        title: "¡Suscripción exitosa!",
-        description: "Recibirás nuestras alertas y análisis en tu correo.",
+        title: t.newsletter.successTitle,
+        description: t.newsletter.successDesc,
       });
     }
   };
@@ -34,36 +36,36 @@ export const NewsletterSection = () => {
           </div>
 
           <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            No te Pierdas <span className="text-gradient-gold">Ninguna Oportunidad</span>
+            {t.newsletter.title1} <span className="text-gradient-gold">{t.newsletter.titleHighlight}</span>
           </h2>
           
           <p className="text-lg text-muted-foreground font-body mb-8 max-w-xl mx-auto">
-            Recibe alertas de precio, análisis de mercado y guías exclusivas directamente en tu email.
+            {t.newsletter.subtitle}
           </p>
 
           {isSubmitted ? (
             <div className="flex items-center justify-center gap-3 text-gold">
               <CheckCircle className="w-6 h-6" />
-              <span className="font-body text-lg">¡Gracias por suscribirte!</span>
+              <span className="font-body text-lg">{t.newsletter.thanks}</span>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
               <Input
                 type="email"
-                placeholder="tu@email.com"
+                placeholder={t.newsletter.placeholder}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="flex-1 h-12"
               />
               <Button type="submit" variant="gold" size="lg">
-                Suscribirme
+                {t.newsletter.subscribe}
               </Button>
             </form>
           )}
 
           <p className="mt-4 text-xs text-muted-foreground font-body">
-            Sin spam. Cancela cuando quieras. Tu privacidad es nuestra prioridad.
+            {t.newsletter.privacy}
           </p>
         </div>
       </div>

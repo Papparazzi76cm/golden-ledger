@@ -5,8 +5,11 @@ import { HistoricalGoldChart } from './HistoricalGoldChart';
 import { ComparisonChart } from './ComparisonChart';
 import { PriceAlertForm } from './PriceAlertForm';
 import { CurrencySelector } from './CurrencySelector';
+import { useLanguage } from '@/hooks/useLanguage';
 
 export const ToolsSection = () => {
+  const { t } = useLanguage();
+  
   return (
     <section id="herramientas" className="py-24 relative">
       {/* Background */}
@@ -16,13 +19,13 @@ export const ToolsSection = () => {
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
           <span className="inline-block px-4 py-1 rounded-full bg-gold/10 text-gold text-sm font-body mb-4">
-            Herramientas Profesionales
+            {t.tools.badge}
           </span>
           <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Toma Decisiones <span className="text-gradient-gold">Informadas</span>
+            {t.tools.title1} <span className="text-gradient-gold">{t.tools.titleHighlight}</span>
           </h2>
           <p className="text-muted-foreground font-body mb-6">
-            Calculadoras y herramientas interactivas para analizar tus inversiones en oro
+            {t.tools.subtitle}
           </p>
           
           {/* Currency Selector */}
