@@ -4,6 +4,7 @@ import { Menu, X, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { GoldPriceDisplay } from './GoldPriceDisplay';
 import { LanguageSelector } from './LanguageSelector';
+import { ThemeToggle } from './ThemeToggle';
 import { useLanguage } from '@/hooks/useLanguage';
 
 export const Header = () => {
@@ -46,7 +47,7 @@ export const Header = () => {
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled 
-          ? 'bg-charcoal-dark/95 backdrop-blur-md border-b border-gold/10' 
+          ? 'bg-background/95 backdrop-blur-md border-b border-gold/10' 
           : 'bg-transparent'
       }`}
     >
@@ -92,6 +93,7 @@ export const Header = () => {
           </nav>
 
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <LanguageSelector />
             <div className="hidden md:block">
               <GoldPriceDisplay size="sm" showChange={false} />
@@ -112,7 +114,7 @@ export const Header = () => {
       </div>
 
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-charcoal-dark/98 backdrop-blur-md border-t border-gold/10">
+        <div className="lg:hidden bg-background/98 backdrop-blur-md border-t border-gold/10">
           <nav className="container mx-auto px-4 py-6 space-y-4">
             {navLinks.map((link) => (
               <a
