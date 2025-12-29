@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, User, Calendar, Share2, Bookmark, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -181,6 +182,11 @@ const ArticlePage = () => {
   
   const article = slug ? getArticleBySlug(slug) : undefined;
   const recentArticles = getRecentArticles(3).filter(a => a.slug !== slug);
+
+  // Smooth scroll to top when article loads or slug changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [slug]);
 
   if (!article) {
     return (
