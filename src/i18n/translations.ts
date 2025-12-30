@@ -233,6 +233,14 @@ export interface Translations {
     language: string;
     home: string;
   };
+  
+  // SEO
+  seo: {
+    homeTitle: string;
+    homeDescription: string;
+    blogTitle: string;
+    blogDescription: string;
+  };
 }
 
 export const translations: Record<Language, Translations> = {
@@ -458,6 +466,12 @@ export const translations: Record<Language, Translations> = {
       language: 'Idioma',
       home: 'Inicio',
     },
+    seo: {
+      homeTitle: 'OroInversión - Tu Guía Definitiva para Invertir en Oro',
+      homeDescription: 'Portal premium de inversión en oro. Precio en tiempo real, calculadoras, conversor, comparador de activos y guías educativas para inversores inteligentes.',
+      blogTitle: 'Blog de Inversión en Oro - Guías, Análisis y Noticias',
+      blogDescription: 'Artículos expertos sobre inversión en oro: guías para principiantes, análisis de mercado, comparativas y estrategias de inversión en metales preciosos.',
+    },
   },
   
   en: {
@@ -681,6 +695,12 @@ export const translations: Record<Language, Translations> = {
       currency: 'Currency',
       language: 'Language',
       home: 'Home',
+    },
+    seo: {
+      homeTitle: 'GoldInvest - Your Ultimate Guide to Investing in Gold',
+      homeDescription: 'Premium gold investment portal. Real-time price, calculators, converter, asset comparator and educational guides for smart investors.',
+      blogTitle: 'Gold Investment Blog - Guides, Analysis and News',
+      blogDescription: 'Expert articles on gold investment: beginner guides, market analysis, comparisons and precious metals investment strategies.',
     },
   },
   
@@ -906,6 +926,12 @@ export const translations: Record<Language, Translations> = {
       language: 'Langue',
       home: 'Accueil',
     },
+    seo: {
+      homeTitle: "OrInvestissement - Votre Guide Ultime pour Investir dans l'Or",
+      homeDescription: "Portail premium d'investissement en or. Prix en temps réel, calculatrices, convertisseur, comparateur d'actifs et guides éducatifs pour investisseurs avisés.",
+      blogTitle: "Blog d'Investissement en Or - Guides, Analyses et Actualités",
+      blogDescription: "Articles d'experts sur l'investissement en or : guides pour débutants, analyses de marché, comparatifs et stratégies d'investissement en métaux précieux.",
+    },
   },
   
   de: {
@@ -1129,6 +1155,12 @@ export const translations: Record<Language, Translations> = {
       currency: 'Währung',
       language: 'Sprache',
       home: 'Startseite',
+    },
+    seo: {
+      homeTitle: 'GoldInvestition - Ihr Ultimativer Leitfaden für Goldinvestitionen',
+      homeDescription: 'Premium-Portal für Goldinvestitionen. Echtzeit-Preis, Rechner, Umrechner, Vermögenswertvergleich und Bildungsleitfäden für intelligente Anleger.',
+      blogTitle: 'Goldinvestment-Blog - Leitfäden, Analysen und Nachrichten',
+      blogDescription: 'Expertenartikel über Goldinvestitionen: Anfängerleitfäden, Marktanalysen, Vergleiche und Anlagestrategien für Edelmetalle.',
     },
   },
 };

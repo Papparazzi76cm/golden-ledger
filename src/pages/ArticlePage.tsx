@@ -10,6 +10,7 @@ import { getArticleBySlug, getRecentArticles, getTranslatedArticle } from '@/dat
 import { getArticleImage } from '@/data/articleImages';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/useLanguage';
+import { SEO, ArticleSchema, BreadcrumbSchema } from '@/components/SEO';
 
 // Simple markdown renderer component
 const MarkdownContent = ({ content }: { content: string }) => {
@@ -184,12 +185,16 @@ const ArticlePage = () => {
   const translated = article ? getTranslatedArticle(article, language) : undefined;
   const recentArticles = getRecentArticles(3, language).filter(a => a.slug !== slug);
 
+  const siteUrl = typeof window !== 'undefined' ? window.location.origin : '';
+  const articleUrl = `${siteUrl}/blog/${slug}`;
+  const articleImage = article ? getArticleImage(article.slug) : '';
+
   // Smooth scroll to top when article loads or slug changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [slug]);
 
-  if (!article) {
+  if (!article || !translated) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -228,15 +233,46 @@ const ArticlePage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO 
+        title={translated.title}
+        description={translated.excerpt}
+        image={articleImage}
+        type="article"
+        canonical={articleUrl}
+        article={{
+          author: article.author,
+          publishedTime: article.date,
+          tags: translated.tags
+        }}
+      />
+      <ArticleSchema 
+        title={translated.title}
+        description={translated.excerpt}
+        image={articleImage.startsWith('http') ? articleImage : `${siteUrl}${articleImage}`}
+        datePublished={article.date}
+        author={article.author}
+        url={articleUrl}
+      />
+      <BreadcrumbSchema 
+        items={[
+          { name: t.common.home, url: siteUrl },
+          { name: 'Blog', url: `${siteUrl}/blog` },
+          { name: translated.title, url: articleUrl }
+        ]}
+      />
+      
       <Header />
       
       <main className="pt-24">
         {/* Hero Image */}
         <div className="w-full h-64 md:h-96 relative overflow-hidden">
           <img 
-            src={getArticleImage(article.slug)}
-            alt={translated!.title}
+            src={articleImage}
+            alt={translated.title}
             className="w-full h-full object-cover"
+            loading="eager"
+            width="1200"
+            height="630"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
         </div>
@@ -244,16 +280,16 @@ const ArticlePage = () => {
         {/* Breadcrumb */}
         <div className="border-b border-gold/10">
           <div className="container mx-auto px-4 py-4">
-            <nav className="flex items-center gap-2 text-sm font-body">
+            <nav className="flex items-center gap-2 text-sm font-body" aria-label="Breadcrumb">
               <Link to="/" className="text-muted-foreground hover:text-gold transition-colors">
                 {t.common.home}
               </Link>
-              <ChevronRight className="w-4 h-4 text-muted-foreground" />
+              <ChevronRight className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
               <Link to="/blog" className="text-muted-foreground hover:text-gold transition-colors">
                 Blog
               </Link>
-              <ChevronRight className="w-4 h-4 text-muted-foreground" />
-              <span className="text-foreground">{translated!.category}</span>
+              <ChevronRight className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
+              <span className="text-foreground">{translated.category}</span>
             </nav>
           </div>
         </div>
@@ -273,36 +309,38 @@ const ArticlePage = () => {
               </Button>
 
               <span className="inline-block px-4 py-1 rounded-full bg-gold/10 text-gold text-sm font-body mb-6">
-                {translated!.category}
+                {translated.category}
               </span>
 
               <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
-                {translated!.title}
+                {translated.title}
               </h1>
 
               <p className="text-lg text-muted-foreground font-body mb-8">
-                {translated!.excerpt}
+                {translated.excerpt}
               </p>
 
               <div className="flex flex-wrap items-center gap-6 pb-8 border-b border-gold/10">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground font-body">
-                  <User className="w-4 h-4" />
+                  <User className="w-4 h-4" aria-hidden="true" />
                   <span>{article.author}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground font-body">
-                  <Calendar className="w-4 h-4" />
-                  <span>{new Date(article.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                  <Calendar className="w-4 h-4" aria-hidden="true" />
+                  <time dateTime={article.date}>
+                    {new Date(article.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  </time>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground font-body">
-                  <Clock className="w-4 h-4" />
+                  <Clock className="w-4 h-4" aria-hidden="true" />
                   <span>{article.readTime} {t.blog.readTime}</span>
                 </div>
 
                 <div className="flex items-center gap-2 ml-auto">
-                  <Button variant="ghost" size="icon" onClick={handleShare}>
+                  <Button variant="ghost" size="icon" onClick={handleShare} aria-label={t.blog.share}>
                     <Share2 className="w-4 h-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" onClick={handleBookmark}>
+                  <Button variant="ghost" size="icon" onClick={handleBookmark} aria-label={t.blog.articleSaved}>
                     <Bookmark className="w-4 h-4" />
                   </Button>
                 </div>
@@ -312,16 +350,16 @@ const ArticlePage = () => {
         </section>
 
         {/* Article Content */}
-        <section className="py-12">
+        <article className="py-12">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
-              <MarkdownContent content={translated!.content} />
+              <MarkdownContent content={translated.content} />
 
               {/* Tags */}
               <div className="mt-12 pt-8 border-t border-gold/10">
                 <h4 className="font-heading text-lg font-semibold text-foreground mb-4">{t.blog.tags}</h4>
                 <div className="flex flex-wrap gap-2">
-                  {translated!.tags.map(tag => (
+                  {translated.tags.map(tag => (
                     <span 
                       key={tag}
                       className="px-3 py-1 rounded-full bg-charcoal-light text-muted-foreground text-sm font-body hover:bg-gold/10 hover:text-gold transition-colors cursor-pointer"
@@ -347,7 +385,7 @@ const ArticlePage = () => {
               </div>
             </div>
           </div>
-        </section>
+        </article>
 
         {/* Related Articles */}
         <section className="py-16 bg-charcoal-light/30">
@@ -367,6 +405,9 @@ const ArticlePage = () => {
                           src={getArticleImage(relatedArticle.slug)}
                           alt={relatedTranslated.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                          loading="lazy"
+                          width="400"
+                          height="225"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
                       </div>
