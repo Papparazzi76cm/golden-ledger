@@ -8,6 +8,7 @@ import { NewsletterSection } from '@/components/NewsletterSection';
 import { articles, getAllCategories, getFeaturedArticle, getTranslatedArticle } from '@/data/articles';
 import { getArticleImage } from '@/data/articleImages';
 import { useLanguage } from '@/hooks/useLanguage';
+import { SEO, BreadcrumbSchema } from '@/components/SEO';
 
 const Blog = () => {
   const { t, language } = useLanguage();
@@ -15,8 +16,22 @@ const Blog = () => {
   const categories = getAllCategories(language);
   const regularArticles = articles.filter(a => !a.featured);
 
+  const siteUrl = typeof window !== 'undefined' ? window.location.origin : '';
+
   return (
     <div className="min-h-screen bg-background">
+      <SEO 
+        title={t.seo?.blogTitle || "Blog de Inversión en Oro - Guías, Análisis y Noticias"}
+        description={t.seo?.blogDescription || "Artículos expertos sobre inversión en oro: guías para principiantes, análisis de mercado, comparativas y estrategias de inversión en metales preciosos."}
+        type="website"
+      />
+      <BreadcrumbSchema 
+        items={[
+          { name: t.common.home, url: siteUrl },
+          { name: 'Blog', url: `${siteUrl}/blog` }
+        ]}
+      />
+      
       <Header />
       
       <main className="pt-24">
@@ -75,6 +90,9 @@ const Blog = () => {
                           src={getArticleImage(featuredArticle.slug)}
                           alt={translated.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          loading="eager"
+                          width="800"
+                          height="450"
                         />
                         <div className="absolute inset-0 bg-gradient-to-r from-card/80 to-transparent lg:bg-none" />
                       </div>
@@ -150,6 +168,9 @@ const Blog = () => {
                           src={getArticleImage(article.slug)}
                           alt={translated.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                          loading="lazy"
+                          width="400"
+                          height="225"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
                       </div>
