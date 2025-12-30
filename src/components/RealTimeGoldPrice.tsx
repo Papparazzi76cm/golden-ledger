@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { TrendingUp, TrendingDown, RefreshCw, Wifi, WifiOff } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useCurrency } from '@/hooks/useCurrency';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
+import { Area, AreaChart, ResponsiveContainer } from 'recharts';
 
 interface GoldPriceData {
   price: number;
@@ -14,6 +15,11 @@ interface GoldPriceData {
   low24h: number;
   timestamp: Date;
   isLive: boolean;
+}
+
+interface PriceHistoryPoint {
+  time: string;
+  price: number;
 }
 
 const useRealTimeGoldPrice = () => {
@@ -26,8 +32,56 @@ const useRealTimeGoldPrice = () => {
     timestamp: new Date(),
     isLive: false,
   });
+  const [priceHistory, setPriceHistory] = useState<PriceHistoryPoint[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { currency } = useCurrency();
+
+  // Get price for selected currency from database row
+  const getPriceForCurrency = useCallback((row: { price_usd: number; price_eur?: number | null; price_gbp?: number | null; price_chf?: number | null; price_jpy?: number | null }) => {
+    if (currency === 'EUR' && row.price_eur) return Number(row.price_eur);
+    if (currency === 'GBP' && row.price_gbp) return Number(row.price_gbp);
+    if (currency === 'CHF' && row.price_chf) return Number(row.price_chf);
+    if (currency === 'JPY' && row.price_jpy) return Number(row.price_jpy);
+    return Number(row.price_usd);
+  }, [currency]);
+
+  // Fetch price history for the last 24 hours
+  const fetchPriceHistory = useCallback(async () => {
+    try {
+      const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+      
+      const { data, error } = await supabase
+        .from('gold_prices')
+        .select('fetched_at, price_usd, price_eur, price_gbp, price_chf, price_jpy')
+        .gte('fetched_at', twentyFourHoursAgo)
+        .order('fetched_at', { ascending: true });
+
+      if (error || !data || data.length === 0) {
+        // Generate simulated history if no real data
+        const simulatedHistory: PriceHistoryPoint[] = [];
+        const basePrice = 4375;
+        for (let i = 24; i >= 0; i--) {
+          const time = new Date(Date.now() - i * 60 * 60 * 1000);
+          const variation = (Math.sin(i * 0.5) * 20) + (Math.random() - 0.5) * 15;
+          simulatedHistory.push({
+            time: time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            price: basePrice + variation,
+          });
+        }
+        setPriceHistory(simulatedHistory);
+        return;
+      }
+
+      const history = data.map(row => ({
+        time: new Date(row.fetched_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        price: getPriceForCurrency(row),
+      }));
+      
+      setPriceHistory(history);
+    } catch (err) {
+      console.error('Error fetching price history:', err);
+    }
+  }, [getPriceForCurrency]);
 
   // Fetch the latest price from database
   const fetchLatestPrice = useCallback(async () => {
@@ -37,44 +91,37 @@ const useRealTimeGoldPrice = () => {
         .select('*')
         .order('fetched_at', { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
 
-      if (error) {
+      if (error || !data) {
         console.log('No prices in database yet, using simulated data');
         return false;
       }
 
-      if (data) {
-        // Get the price based on selected currency
-        let price = data.price_usd;
-        if (currency === 'EUR' && data.price_eur) price = Number(data.price_eur);
-        else if (currency === 'GBP' && data.price_gbp) price = Number(data.price_gbp);
-        else if (currency === 'CHF' && data.price_chf) price = Number(data.price_chf);
-        else if (currency === 'JPY' && data.price_jpy) price = Number(data.price_jpy);
+      const price = getPriceForCurrency(data);
 
-        setPriceData({
-          price: Number(price),
-          change: Number(data.change_24h) || 0,
-          changePercent: Number(data.change_percent_24h) || 0,
-          high24h: Number(data.high_24h) || price * 1.02,
-          low24h: Number(data.low_24h) || price * 0.98,
-          timestamp: new Date(data.fetched_at),
-          isLive: true,
-        });
-        return true;
-      }
-      return false;
+      setPriceData({
+        price: Number(price),
+        change: Number(data.change_24h) || 0,
+        changePercent: Number(data.change_percent_24h) || 0,
+        high24h: Number(data.high_24h) || price * 1.02,
+        low24h: Number(data.low_24h) || price * 0.98,
+        timestamp: new Date(data.fetched_at),
+        isLive: true,
+      });
+      return true;
     } catch (err) {
       console.error('Error fetching gold price:', err);
       return false;
     }
-  }, [currency]);
+  }, [getPriceForCurrency]);
 
   // Initial fetch
   useEffect(() => {
     const init = async () => {
       setIsLoading(true);
       const hasRealData = await fetchLatestPrice();
+      await fetchPriceHistory();
       
       if (!hasRealData) {
         // Use simulated prices if no real data
@@ -93,7 +140,7 @@ const useRealTimeGoldPrice = () => {
     };
 
     init();
-  }, [fetchLatestPrice]);
+  }, [fetchLatestPrice, fetchPriceHistory]);
 
   // Simulate small price fluctuations between API calls
   useEffect(() => {
@@ -118,24 +165,63 @@ const useRealTimeGoldPrice = () => {
 
   // Re-fetch when currency changes
   useEffect(() => {
-    if (priceData.isLive) {
-      fetchLatestPrice();
-    }
-  }, [currency, priceData.isLive, fetchLatestPrice]);
+    fetchLatestPrice();
+    fetchPriceHistory();
+  }, [currency, fetchLatestPrice, fetchPriceHistory]);
 
   const refresh = useCallback(async () => {
     setIsLoading(true);
     await fetchLatestPrice();
+    await fetchPriceHistory();
     setIsLoading(false);
-  }, [fetchLatestPrice]);
+  }, [fetchLatestPrice, fetchPriceHistory]);
 
-  return { priceData, isLoading, refresh };
+  return { priceData, priceHistory, isLoading, refresh };
+};
+
+// Sparkline Component
+const PriceSparkline = ({ data, isPositive }: { data: PriceHistoryPoint[]; isPositive: boolean }) => {
+  const gradientId = 'sparklineGradient';
+  
+  if (data.length === 0) return null;
+  
+  return (
+    <div className="h-16 w-full">
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart data={data} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+          <defs>
+            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+              <stop 
+                offset="5%" 
+                stopColor={isPositive ? 'hsl(var(--chart-2))' : 'hsl(var(--destructive))'} 
+                stopOpacity={0.3}
+              />
+              <stop 
+                offset="95%" 
+                stopColor={isPositive ? 'hsl(var(--chart-2))' : 'hsl(var(--destructive))'} 
+                stopOpacity={0}
+              />
+            </linearGradient>
+          </defs>
+          <Area
+            type="monotone"
+            dataKey="price"
+            stroke={isPositive ? 'hsl(var(--chart-2))' : 'hsl(var(--destructive))'}
+            strokeWidth={1.5}
+            fill={`url(#${gradientId})`}
+            dot={false}
+            isAnimationActive={true}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
 };
 
 export const RealTimeGoldPrice = () => {
   const { language } = useLanguage();
   const { symbol, currency } = useCurrency();
-  const { priceData, isLoading, refresh } = useRealTimeGoldPrice();
+  const { priceData, priceHistory, isLoading, refresh } = useRealTimeGoldPrice();
   
   const isPositive = priceData.change >= 0;
 
@@ -243,6 +329,14 @@ export const RealTimeGoldPrice = () => {
               {isPositive ? '+' : ''}{formatPrice(priceData.change)} ({priceData.changePercent.toFixed(2)}%)
             </span>
           </div>
+        </div>
+
+        {/* 24h Sparkline */}
+        <div className="pt-4 border-t border-border/30">
+          <p className="text-xs text-muted-foreground mb-2 text-center">
+            {language === 'es' ? 'Últimas 24h' : language === 'fr' ? 'Dernières 24h' : language === 'de' ? 'Letzte 24h' : 'Last 24h'}
+          </p>
+          <PriceSparkline data={priceHistory} isPositive={isPositive} />
         </div>
 
         {/* 24h Range */}
