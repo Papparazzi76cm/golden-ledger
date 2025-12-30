@@ -13,4 +13,8 @@ Allow: /
 User-agent: *
 Allow: /
 
+# Static sitemap fallback
 Sitemap: https://oroinversion.lovable.app/sitemap.xml
+
+# Dynamic sitemap (edge function)
+# Sitemap: https://jaganbntpwzeoozdqoom.supabase.co/functions/v1/sitemap
