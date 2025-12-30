@@ -65,25 +65,77 @@ const generateMultiAssetData = (): AssetDataPoint[] => {
     2021: { gold: 1799, sp500: 4766, bitcoin: 47000, cpi: 551 },
     2022: { gold: 1800, sp500: 3840, bitcoin: 16500, cpi: 595 },
     2023: { gold: 1940, sp500: 4770, bitcoin: 42000, cpi: 614 },
-    2024: { gold: 2350, sp500: 5880, bitcoin: 95000, cpi: 632 },
+    2024: { gold: 2500, sp500: 5880, bitcoin: 95000, cpi: 632 },
+    2025: { gold: 3500, sp500: 6500, bitcoin: 100000, cpi: 649 },
+  };
+
+  // Precise monthly data for 2024
+  const monthlyData2024: { [month: number]: { gold: number; sp500: number; bitcoin: number; cpi: number } } = {
+    1: { gold: 2034, sp500: 4804, bitcoin: 42500, cpi: 618 },
+    2: { gold: 2023, sp500: 5012, bitcoin: 51500, cpi: 620 },
+    3: { gold: 2158, sp500: 5171, bitcoin: 69500, cpi: 622 },
+    4: { gold: 2336, sp500: 5095, bitcoin: 63000, cpi: 624 },
+    5: { gold: 2352, sp500: 5235, bitcoin: 67500, cpi: 626 },
+    6: { gold: 2326, sp500: 5415, bitcoin: 61000, cpi: 628 },
+    7: { gold: 2395, sp500: 5543, bitcoin: 66000, cpi: 630 },
+    8: { gold: 2468, sp500: 5502, bitcoin: 59000, cpi: 632 },
+    9: { gold: 2567, sp500: 5626, bitcoin: 63500, cpi: 634 },
+    10: { gold: 2690, sp500: 5792, bitcoin: 68000, cpi: 636 },
+    11: { gold: 2651, sp500: 5930, bitcoin: 96500, cpi: 638 },
+    12: { gold: 2644, sp500: 6011, bitcoin: 93500, cpi: 640 },
+  };
+
+  // Precise monthly data for 2025
+  const monthlyData2025: { [month: number]: { gold: number; sp500: number; bitcoin: number; cpi: number } } = {
+    1: { gold: 2710, sp500: 5980, bitcoin: 102400, cpi: 318 },
+    2: { gold: 2895, sp500: 6039, bitcoin: 84400, cpi: 319 },
+    3: { gold: 2983, sp500: 5684, bitcoin: 82500, cpi: 320 },
+    4: { gold: 3207, sp500: 5370, bitcoin: 94200, cpi: 321 },
+    5: { gold: 3278, sp500: 5811, bitcoin: 104600, cpi: 321 },
+    6: { gold: 3352, sp500: 6030, bitcoin: 107100, cpi: 323 },
+    7: { gold: 3338, sp500: 6297, bitcoin: 115800, cpi: 323 },
+    8: { gold: 3363, sp500: 6409, bitcoin: 108200, cpi: 324 },
+    9: { gold: 3665, sp500: 6584, bitcoin: 114000, cpi: 325 },
+    10: { gold: 4053, sp500: 6736, bitcoin: 109600, cpi: 326 },
+    11: { gold: 4230, sp500: 6741, bitcoin: 90400, cpi: 324 },
+    12: { gold: 4375, sp500: 6935, bitcoin: 87500, cpi: 326 },
   };
 
   // Generate monthly data with variation
   Object.entries(historicalData).forEach(([yearStr, values]) => {
     const year = parseInt(yearStr);
     for (let month = 1; month <= 12; month++) {
-      if (year === 2024 && month > 12) continue;
+      let gold: number, sp500: number, bitcoin: number | null, inflation: number;
       
-      const variation = (Math.sin(month * 0.5 + year * 0.1) * 0.05 + (Math.random() - 0.5) * 0.03);
+      // Use precise monthly data for 2024 and 2025
+      if (year === 2024 && monthlyData2024[month]) {
+        const d = monthlyData2024[month];
+        gold = d.gold;
+        sp500 = d.sp500;
+        bitcoin = d.bitcoin;
+        inflation = d.cpi;
+      } else if (year === 2025 && monthlyData2025[month]) {
+        const d = monthlyData2025[month];
+        gold = d.gold;
+        sp500 = d.sp500;
+        bitcoin = d.bitcoin;
+        inflation = d.cpi;
+      } else {
+        const variation = (Math.sin(month * 0.5 + year * 0.1) * 0.05 + (Math.random() - 0.5) * 0.03);
+        gold = Math.round(values.gold * (1 + variation));
+        sp500 = Math.round(values.sp500 * (1 + variation * 0.8));
+        bitcoin = values.bitcoin ? Math.round(values.bitcoin * (1 + variation * 2)) : null;
+        inflation = Math.round(values.cpi * (1 + variation * 0.02));
+      }
       
       data.push({
         year,
         month,
         date: `${year}-${month.toString().padStart(2, '0')}`,
-        gold: Math.round(values.gold * (1 + variation)),
-        sp500: Math.round(values.sp500 * (1 + variation * 0.8)),
-        bitcoin: values.bitcoin ? Math.round(values.bitcoin * (1 + variation * 2)) : null,
-        inflation: Math.round(values.cpi * (1 + variation * 0.02)),
+        gold,
+        sp500,
+        bitcoin,
+        inflation,
       });
     }
   });
@@ -97,7 +149,7 @@ const generateMultiAssetData = (): AssetDataPoint[] => {
 export const multiAssetData = generateMultiAssetData();
 
 export const getMultiAssetDataForPeriod = (years: number): AssetDataPoint[] => {
-  const currentYear = 2024;
+  const currentYear = 2025;
   const startYear = currentYear - years;
   
   const data = multiAssetData.filter(d => d.year >= startYear);

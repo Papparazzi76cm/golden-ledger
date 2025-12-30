@@ -10,7 +10,7 @@ export interface GoldDataPoint {
 const generateHistoricalData = (): GoldDataPoint[] => {
   const data: GoldDataPoint[] = [];
   
-  // Historical gold prices by year (approximate annual averages)
+  // Historical gold prices by year (approximate annual averages in USD per ounce)
   const historicalPrices: { [year: number]: number } = {
     1974: 154, 1975: 161, 1976: 125, 1977: 148, 1978: 193,
     1979: 306, 1980: 615, 1981: 460, 1982: 376, 1983: 424,
@@ -22,19 +22,36 @@ const generateHistoricalData = (): GoldDataPoint[] => {
     2009: 972, 2010: 1225, 2011: 1571, 2012: 1669, 2013: 1411,
     2014: 1266, 2015: 1160, 2016: 1251, 2017: 1257, 2018: 1268,
     2019: 1393, 2020: 1770, 2021: 1799, 2022: 1800, 2023: 1940,
-    2024: 2350
+    2024: 2500, 2025: 3500
+  };
+
+  // Monthly gold prices for 2024 and 2025 (more precise data)
+  const monthlyPrices2024: { [month: number]: number } = {
+    1: 2034, 2: 2023, 3: 2158, 4: 2336, 5: 2352, 6: 2326,
+    7: 2395, 8: 2468, 9: 2567, 10: 2690, 11: 2651, 12: 2644
+  };
+
+  const monthlyPrices2025: { [month: number]: number } = {
+    1: 2710, 2: 2895, 3: 2983, 4: 3207, 5: 3278, 6: 3352,
+    7: 3338, 8: 3363, 9: 3665, 10: 4053, 11: 4230, 12: 4375
   };
 
   // Generate monthly data points with some variation
   Object.entries(historicalPrices).forEach(([yearStr, avgPrice]) => {
     const year = parseInt(yearStr);
     for (let month = 1; month <= 12; month++) {
-      // Skip future months in 2024
-      if (year === 2024 && month > 12) continue;
+      let price: number;
       
-      // Add realistic monthly variation (±8%)
-      const variation = (Math.sin(month * 0.5 + year * 0.1) * 0.08 + (Math.random() - 0.5) * 0.04);
-      const price = Math.round(avgPrice * (1 + variation));
+      // Use precise monthly data for 2024 and 2025
+      if (year === 2024 && monthlyPrices2024[month]) {
+        price = monthlyPrices2024[month];
+      } else if (year === 2025 && monthlyPrices2025[month]) {
+        price = monthlyPrices2025[month];
+      } else {
+        // Add realistic monthly variation (±8%) for historical years
+        const variation = (Math.sin(month * 0.5 + year * 0.1) * 0.08 + (Math.random() - 0.5) * 0.04);
+        price = Math.round(avgPrice * (1 + variation));
+      }
       
       const date = `${year}-${month.toString().padStart(2, '0')}`;
       data.push({ year, month, price, date });
@@ -50,7 +67,7 @@ const generateHistoricalData = (): GoldDataPoint[] => {
 export const historicalGoldData = generateHistoricalData();
 
 export const getDataForPeriod = (years: number): GoldDataPoint[] => {
-  const currentYear = 2024;
+  const currentYear = 2025;
   const startYear = currentYear - years;
   
   return historicalGoldData.filter(d => d.year >= startYear);
