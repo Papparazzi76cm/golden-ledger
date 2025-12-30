@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      gold_prices: {
+        Row: {
+          change_24h: number | null
+          change_percent_24h: number | null
+          fetched_at: string
+          high_24h: number | null
+          id: string
+          low_24h: number | null
+          price_chf: number | null
+          price_eur: number | null
+          price_gbp: number | null
+          price_jpy: number | null
+          price_usd: number
+        }
+        Insert: {
+          change_24h?: number | null
+          change_percent_24h?: number | null
+          fetched_at?: string
+          high_24h?: number | null
+          id?: string
+          low_24h?: number | null
+          price_chf?: number | null
+          price_eur?: number | null
+          price_gbp?: number | null
+          price_jpy?: number | null
+          price_usd: number
+        }
+        Update: {
+          change_24h?: number | null
+          change_percent_24h?: number | null
+          fetched_at?: string
+          high_24h?: number | null
+          id?: string
+          low_24h?: number | null
+          price_chf?: number | null
+          price_eur?: number | null
+          price_gbp?: number | null
+          price_jpy?: number | null
+          price_usd?: number
+        }
+        Relationships: []
+      }
       price_alerts: {
         Row: {
           created_at: string

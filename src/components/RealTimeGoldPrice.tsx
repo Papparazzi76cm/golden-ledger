@@ -4,6 +4,7 @@ import { TrendingUp, TrendingDown, RefreshCw, Wifi, WifiOff } from 'lucide-react
 import { useLanguage } from '@/hooks/useLanguage';
 import { useCurrency } from '@/hooks/useCurrency';
 import { Button } from '@/components/ui/button';
+import { supabase } from '@/integrations/supabase/client';
 
 interface GoldPriceData {
   price: number;
@@ -15,8 +16,6 @@ interface GoldPriceData {
   isLive: boolean;
 }
 
-// Simulated real-time price based on actual Dec 2025 prices
-// When API is configured, this will use real data
 const useRealTimeGoldPrice = () => {
   const [priceData, setPriceData] = useState<GoldPriceData>({
     price: 4375.00,
@@ -25,60 +24,117 @@ const useRealTimeGoldPrice = () => {
     high24h: 4550.00,
     low24h: 4330.00,
     timestamp: new Date(),
-    isLive: false, // Will be true when using real API
+    isLive: false,
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const { currency } = useCurrency();
 
-  // Simulate price updates with realistic market behavior
+  // Fetch the latest price from database
+  const fetchLatestPrice = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('gold_prices')
+        .select('*')
+        .order('fetched_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (error) {
+        console.log('No prices in database yet, using simulated data');
+        return false;
+      }
+
+      if (data) {
+        // Get the price based on selected currency
+        let price = data.price_usd;
+        if (currency === 'EUR' && data.price_eur) price = Number(data.price_eur);
+        else if (currency === 'GBP' && data.price_gbp) price = Number(data.price_gbp);
+        else if (currency === 'CHF' && data.price_chf) price = Number(data.price_chf);
+        else if (currency === 'JPY' && data.price_jpy) price = Number(data.price_jpy);
+
+        setPriceData({
+          price: Number(price),
+          change: Number(data.change_24h) || 0,
+          changePercent: Number(data.change_percent_24h) || 0,
+          high24h: Number(data.high_24h) || price * 1.02,
+          low24h: Number(data.low_24h) || price * 0.98,
+          timestamp: new Date(data.fetched_at),
+          isLive: true,
+        });
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error('Error fetching gold price:', err);
+      return false;
+    }
+  }, [currency]);
+
+  // Initial fetch
   useEffect(() => {
-    const basePrice = 4375;
-    const volatility = 0.002; // 0.2% volatility per update
-    
-    const updatePrice = () => {
-      setPriceData(prev => {
-        // Random walk with mean reversion
-        const randomChange = (Math.random() - 0.5) * 2 * basePrice * volatility;
-        const meanReversion = (basePrice - prev.price) * 0.1;
-        const newPrice = prev.price + randomChange + meanReversion;
-        
-        // Keep within realistic bounds
-        const boundedPrice = Math.max(4200, Math.min(4600, newPrice));
-        const change = boundedPrice - 4332.98; // Previous day close
-        
-        return {
-          price: Math.round(boundedPrice * 100) / 100,
-          change: Math.round(change * 100) / 100,
-          changePercent: Math.round((change / 4332.98) * 10000) / 100,
-          high24h: Math.max(prev.high24h, boundedPrice),
-          low24h: Math.min(prev.low24h, boundedPrice),
+    const init = async () => {
+      setIsLoading(true);
+      const hasRealData = await fetchLatestPrice();
+      
+      if (!hasRealData) {
+        // Use simulated prices if no real data
+        const basePrice = 4375;
+        setPriceData({
+          price: basePrice,
+          change: 43.39,
+          changePercent: 1.00,
+          high24h: 4550,
+          low24h: 4330,
           timestamp: new Date(),
           isLive: false,
-        };
-      });
+        });
+      }
+      setIsLoading(false);
     };
 
-    // Update every 5 seconds
-    const interval = setInterval(updatePrice, 5000);
-    return () => clearInterval(interval);
-  }, []);
+    init();
+  }, [fetchLatestPrice]);
 
-  const refresh = useCallback(() => {
+  // Simulate small price fluctuations between API calls
+  useEffect(() => {
+    if (!priceData.isLive) return;
+    
+    const interval = setInterval(() => {
+      setPriceData(prev => {
+        const volatility = 0.0005; // Very small fluctuation
+        const randomChange = (Math.random() - 0.5) * 2 * prev.price * volatility;
+        const newPrice = prev.price + randomChange;
+        
+        return {
+          ...prev,
+          price: Math.round(newPrice * 100) / 100,
+          timestamp: new Date(),
+        };
+      });
+    }, 10000); // Update every 10 seconds
+
+    return () => clearInterval(interval);
+  }, [priceData.isLive]);
+
+  // Re-fetch when currency changes
+  useEffect(() => {
+    if (priceData.isLive) {
+      fetchLatestPrice();
+    }
+  }, [currency, priceData.isLive, fetchLatestPrice]);
+
+  const refresh = useCallback(async () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setPriceData(prev => ({
-        ...prev,
-        timestamp: new Date(),
-      }));
-      setIsLoading(false);
-    }, 500);
-  }, []);
+    await fetchLatestPrice();
+    setIsLoading(false);
+  }, [fetchLatestPrice]);
 
   return { priceData, isLoading, refresh };
 };
 
 export const RealTimeGoldPrice = () => {
   const { language } = useLanguage();
-  const { formatPrice, currency } = useCurrency();
+  const { symbol, currency } = useCurrency();
   const { priceData, isLoading, refresh } = useRealTimeGoldPrice();
   
   const isPositive = priceData.change >= 0;
@@ -130,6 +186,13 @@ export const RealTimeGoldPrice = () => {
       minute: '2-digit',
       second: '2-digit',
     });
+  };
+
+  const formatPrice = (price: number) => {
+    if (currency === 'JPY') {
+      return `${symbol}${Math.round(price).toLocaleString()}`;
+    }
+    return `${symbol}${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
   return (
@@ -200,7 +263,7 @@ export const RealTimeGoldPrice = () => {
           <div 
             className="absolute top-0 w-3 h-3 bg-gold rounded-full border-2 border-background transform -translate-x-1/2 -translate-y-0.5 shadow-lg"
             style={{ 
-              left: `${((priceData.price - priceData.low24h) / (priceData.high24h - priceData.low24h)) * 100}%` 
+              left: `${Math.min(100, Math.max(0, ((priceData.price - priceData.low24h) / (priceData.high24h - priceData.low24h)) * 100))}%` 
             }}
           />
         </div>

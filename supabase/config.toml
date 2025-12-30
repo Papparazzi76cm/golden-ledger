@@ -1,1 +1,4 @@
 project_id = "jaganbntpwzeoozdqoom"
+
+[functions.fetch-gold-price]
+verify_jwt = false
