@@ -1,38 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-
-// Article data - mirroring the structure from src/data/articles.ts
-const articles = [
-  {
-    slug: "como-comprar-oro-fisico-guia-completa",
-    date: "2024-12-15",
-    priority: 0.8,
-  },
-  {
-    slug: "oro-vs-inflacion-analisis-historico",
-    date: "2024-12-10",
-    priority: 0.7,
-  },
-  {
-    slug: "tipos-de-oro-inversion",
-    date: "2024-12-05",
-    priority: 0.7,
-  },
-  {
-    slug: "almacenamiento-seguro-oro",
-    date: "2024-11-28",
-    priority: 0.7,
-  },
-  {
-    slug: "factores-precio-oro",
-    date: "2024-11-20",
-    priority: 0.7,
-  },
-  {
-    slug: "oro-en-portfolio-diversificado",
-    date: "2024-11-15",
-    priority: 0.7,
-  },
-];
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -46,11 +13,29 @@ serve(async (req) => {
   }
 
   try {
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
     // Get the base URL from the request or use default
     const url = new URL(req.url);
     const baseUrl = url.searchParams.get("baseUrl") || "https://oroinversion.lovable.app";
     
     const today = new Date().toISOString().split("T")[0];
+
+    // Fetch articles from database
+    const { data: articles, error } = await supabase
+      .from("articles")
+      .select("slug, date, priority")
+      .order("date", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching articles:", error);
+      throw new Error("Failed to fetch articles from database");
+    }
+
+    console.log(`Generating sitemap with ${articles?.length || 0} articles`);
 
     // Generate XML
     let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -68,15 +53,18 @@ serve(async (req) => {
     <priority>0.8</priority>
   </url>`;
 
-    // Add all articles dynamically
-    for (const article of articles) {
-      sitemap += `
+    // Add all articles dynamically from database
+    if (articles) {
+      for (const article of articles) {
+        const articleDate = new Date(article.date).toISOString().split("T")[0];
+        sitemap += `
   <url>
     <loc>${baseUrl}/blog/${article.slug}</loc>
-    <lastmod>${article.date}</lastmod>
+    <lastmod>${articleDate}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>${article.priority}</priority>
   </url>`;
+      }
     }
 
     sitemap += `

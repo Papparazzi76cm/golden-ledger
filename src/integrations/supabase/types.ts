@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      articles: {
+        Row: {
+          author: string
+          created_at: string
+          date: string
+          featured: boolean
+          id: string
+          priority: number
+          read_time: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string
+          created_at?: string
+          date: string
+          featured?: boolean
+          id?: string
+          priority?: number
+          read_time?: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string
+          created_at?: string
+          date?: string
+          featured?: boolean
+          id?: string
+          priority?: number
+          read_time?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       gold_prices: {
         Row: {
           change_24h: number | null
