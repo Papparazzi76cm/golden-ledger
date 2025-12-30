@@ -87,18 +87,18 @@ const generateMultiAssetData = (): AssetDataPoint[] => {
 
   // Precise monthly data for 2025
   const monthlyData2025: { [month: number]: { gold: number; sp500: number; bitcoin: number; cpi: number } } = {
-    1: { gold: 2710, sp500: 5980, bitcoin: 102400, cpi: 318 },
-    2: { gold: 2895, sp500: 6039, bitcoin: 84400, cpi: 319 },
-    3: { gold: 2983, sp500: 5684, bitcoin: 82500, cpi: 320 },
-    4: { gold: 3207, sp500: 5370, bitcoin: 94200, cpi: 321 },
-    5: { gold: 3278, sp500: 5811, bitcoin: 104600, cpi: 321 },
-    6: { gold: 3352, sp500: 6030, bitcoin: 107100, cpi: 323 },
-    7: { gold: 3338, sp500: 6297, bitcoin: 115800, cpi: 323 },
-    8: { gold: 3363, sp500: 6409, bitcoin: 108200, cpi: 324 },
-    9: { gold: 3665, sp500: 6584, bitcoin: 114000, cpi: 325 },
-    10: { gold: 4053, sp500: 6736, bitcoin: 109600, cpi: 326 },
-    11: { gold: 4230, sp500: 6741, bitcoin: 90400, cpi: 324 },
-    12: { gold: 4375, sp500: 6935, bitcoin: 87500, cpi: 326 },
+    1: { gold: 2710, sp500: 5980, bitcoin: 102400, cpi: 642 },
+    2: { gold: 2895, sp500: 6039, bitcoin: 84400, cpi: 643 },
+    3: { gold: 2983, sp500: 5684, bitcoin: 82500, cpi: 644 },
+    4: { gold: 3207, sp500: 5370, bitcoin: 94200, cpi: 645 },
+    5: { gold: 3278, sp500: 5811, bitcoin: 104600, cpi: 646 },
+    6: { gold: 3352, sp500: 6030, bitcoin: 107100, cpi: 647 },
+    7: { gold: 3338, sp500: 6297, bitcoin: 115800, cpi: 648 },
+    8: { gold: 3363, sp500: 6409, bitcoin: 108200, cpi: 649 },
+    9: { gold: 3665, sp500: 6584, bitcoin: 114000, cpi: 650 },
+    10: { gold: 4053, sp500: 6736, bitcoin: 109600, cpi: 651 },
+    11: { gold: 4230, sp500: 6741, bitcoin: 90400, cpi: 652 },
+    12: { gold: 4375, sp500: 6935, bitcoin: 87500, cpi: 653 },
   };
 
   // Generate monthly data with variation
