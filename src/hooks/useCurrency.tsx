@@ -7,6 +7,7 @@ interface CurrencyContextType {
   setCurrency: (currency: Currency) => void;
   symbol: string;
   convert: (usdAmount: number) => number;
+  formatPrice: (usdAmount: number) => string;
   rate: number;
 }
 
@@ -38,8 +39,16 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
     return usdAmount * rate;
   };
 
+  const formatPrice = (usdAmount: number) => {
+    const converted = convert(usdAmount);
+    if (currency === 'JPY') {
+      return `${symbol}${Math.round(converted).toLocaleString()}`;
+    }
+    return `${symbol}${converted.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
+
   return (
-    <CurrencyContext.Provider value={{ currency, setCurrency, symbol, convert, rate }}>
+    <CurrencyContext.Provider value={{ currency, setCurrency, symbol, convert, formatPrice, rate }}>
       {children}
     </CurrencyContext.Provider>
   );

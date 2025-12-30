@@ -6,6 +6,8 @@ import { HistoricalGoldChart } from './HistoricalGoldChart';
 import { ComparisonChart } from './ComparisonChart';
 import { PriceAlertForm } from './PriceAlertForm';
 import { CurrencySelector } from './CurrencySelector';
+import { RealTimeGoldPrice } from './RealTimeGoldPrice';
+import { GoldPricePrediction } from './GoldPricePrediction';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useParallax } from '@/hooks/useParallax';
 import goldTrading from '@/assets/gold-trading.jpg';
@@ -48,28 +50,38 @@ export const ToolsSection = () => {
           </div>
         </div>
 
+        {/* Real-Time Price and Prediction Widgets */}
+        <div className="grid md:grid-cols-2 gap-8 mb-12">
+          <div className="animate-fade-in">
+            <RealTimeGoldPrice />
+          </div>
+          <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <GoldPricePrediction />
+          </div>
+        </div>
+
         {/* Historical Chart - Full Width */}
-        <div className="mb-12 animate-fade-in">
+        <div className="mb-12 animate-fade-in" style={{ animationDelay: '0.2s' }}>
           <HistoricalGoldChart />
         </div>
 
         {/* Comparison Chart - Full Width */}
-        <div className="mb-12 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+        <div className="mb-12 animate-fade-in" style={{ animationDelay: '0.3s' }}>
           <ComparisonChart />
         </div>
 
         {/* Tools Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <GoldConverter />
           </div>
-          <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
+          <div className="animate-fade-in" style={{ animationDelay: '0.5s' }}>
             <InvestmentCalculator />
           </div>
-          <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
+          <div className="animate-fade-in" style={{ animationDelay: '0.6s' }}>
             <AssetComparator />
           </div>
-          <div className="animate-fade-in" style={{ animationDelay: '0.5s' }}>
+          <div className="animate-fade-in" style={{ animationDelay: '0.7s' }}>
             <PriceAlertForm />
           </div>
         </div>
